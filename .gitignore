@@ -1,2 +1,12 @@
+*
+!/**/
+!*.*
+
 .idea
 *.zip
+*.txt
+.*.py[c]+
+*.json
+*.xlsx
+*.csv
+*.pyc
