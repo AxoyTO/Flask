@@ -80,11 +80,11 @@ This URL allows to access information about a specific GH user. We access data f
 <h3>HTTP Requests</h3>
 <p>REST API communicates through HTTP requests. A <strong>resource</strong> is any data available in the web service that can be accessed and manipulated with <strong>HTTP</strong> requests to the REST API. The HTTP method tells the API which action to perform on the resource.</p>
 
-<center><img src="img/api-rest-methods-detail.jpeg" alt="HTTP Methods" width="65%"></center>
+<p align="center"><img src="img/api-rest-methods-detail.jpeg" alt="HTTP Methods" width="400"></p>
 
 <h3>Status Codes</h3>
 <p>Once a REST API receives and processes an HTTP request, it will return an HTTP response. Included in this response is an HTTP status code. This code provides information about the results of the request. An application sending requests to the API can check the status code and perform actions based on the result. These actions could include handling errors or displaying a success message to a user.</p>
-<center><img src="img/status-codes.jpeg" alt="HTTP Status Codes" width="65%"></center>
+<p align="center"><img src="img/status-codes.jpeg" alt="HTTP Status Codes" width="400"></p>
 
 Most common status codes returned by REST APIs:
 <table>
@@ -150,7 +150,7 @@ Most common status codes returned by REST APIs:
 <div id="rest-python-requests">
 <h2>REST and Python — Requests Library</h2>
 
-<center><img src="img/requests-lib-logo.png" alt="Requests Library Logo" width="50%"></center>
+<p align="center" width="50%"><img src="img/requests-lib-logo.png" alt="Requests Library Logo" width="300"></p>
 The <strong>requests</strong> library abstracts away the complexities of making HTTP requests.
 
 To start using <strong>requests</strong>, we need to install it first. We can use python package installer(pip) to install it:
