@@ -28,21 +28,33 @@ class Complex:
         return "{r} + {i}i".format(r=self.__real, i=self.__imaginary)
 
     def __add__(self, other):
-        return Complex(self.GetReal() + other.GetReal(), self.GetImaginary() + other.GetImaginary())
+        return Complex(
+            self.GetReal() + other.GetReal(), self.GetImaginary() + other.GetImaginary()
+        )
 
     def __mul__(self, other):
         if type(other) in (int, float):
             return Complex(self.GetReal() * other, self.GetImaginary() * other)
         else:
-            return Complex(self.GetReal() * other.GetReal() - self.GetImaginary() * other.GetImaginary()
-                           + self.GetReal() * other.GetImaginary() + self.GetImaginary() * other.GetReal())
+            return Complex(
+                self.GetReal() * other.GetReal()
+                - self.GetImaginary() * other.GetImaginary()
+                + self.GetReal() * other.GetImaginary()
+                + self.GetImaginary() * other.GetReal()
+            )
 
     def __truediv__(self, other):
         if type(other) in (int, float):
-            return Complex(self.GetReal() / float(other), self.GetImaginary() / float(other))
+            return Complex(
+                self.GetReal() / float(other), self.GetImaginary() / float(other)
+            )
         else:
-            a, b, c, d = self.GetReal(), self.GetImaginary(
-            ), other.GetReal(), other.GetImaginary()
+            a, b, c, d = (
+                self.GetReal(),
+                self.GetImaginary(),
+                other.GetReal(),
+                other.GetImaginary(),
+            )
             nominator = c * c + d * d
             return Complex((a * c + b * d) / nominator, (b * c - a * d) / nominator)
 
@@ -73,7 +85,7 @@ def product(first, second, third):
     print(result)
 
 
-# you can also pass data type of any value as per requirement
+# can also pass data type of any value as per requirement
 @dispatch(float, float, float)
 def product(first, second, third):
     result = first * second * third
