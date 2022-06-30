@@ -151,10 +151,10 @@ app = Flask(__name__, template_folder='../pages/templates')
 
 <h3>Delimiters</h3>
 <ul></ul>
-    <li>`{%....%}` are for statements</li>
-    <li>`{{....}}` are expressions used to print to template output</li>
-    <li>`{#....#}` are for comments which are not included in the template output</li>
-    <li>`#....##` are used as line statements</li>
+    <li> {%....%} are for statements</li>
+    <li> {{....}} are expressions used to print to template output</li>
+    <li> {#....#} are for comments which are not included in the template output</li>
+    <li> #....## are used as line statements</li>
 </ul>
 
 </div>
