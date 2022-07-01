@@ -11,6 +11,7 @@
 [Request Processing](#request-processing)
 [Form Processing](#form-processing)
 [Why Flask Instead of Werkzeug?](#why-flask)
+[References](#references)
 
 <div id="intro">
     <h2>Werkzeug</h2>
@@ -544,3 +545,17 @@ Werkzeug provides much of the key functionality found in Flask, but Flask adds a
 <strong>As with any web framework — Don't re-invent the wheel! Flask is a much better option (when compared to Werkzeug) for web development based on its rich feature set and large collection of extensions.</strong>
 
 </div>
+
+---
+
+<div id="references">
+<h2>References</h2>
+</div>
+
+[Werkzeug Official Document](https://werkzeug.palletsprojects.com/en/2.1.x/)
+
+[TestDriven](https://testdriven.io/blog/what-is-werkzeug/#H-12-form-processing)
+
+---
+
+<a href="#beginning">Go to the beginning</a>
