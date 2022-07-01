@@ -5,6 +5,7 @@
 .idea
 *.zip
 *.txt
+!requirements.txt
 .*.py[c]+
 *.json
 *.xlsx
