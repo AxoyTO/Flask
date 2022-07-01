@@ -10,6 +10,7 @@
 [Jinja2](#jinja2)
 [Werkzeug](#werkzeug)
 [Installing and Setting Up Flask](#flask-installation-setup)
+[Templates](#templates)
 [Deploying a Flask app](#deploying-flask)
 [Signals](#signals)
 [Testing Flask Applications](#testing)
@@ -91,7 +92,7 @@ Flask offers suggestions, but doesn't enforce any dependencies or project layout
 </div>
 <div id="wsgi">
     <h2>WSGI</h2>
-    <p><strong>WSGI</strong> stands for "Web Server Gateway Interface". It is used to forward requests from a web server (such as Apache or NGINX) to a backend Python web application or framework. From there, responses are then passed back to the webserver to reply to the requestor.</p>
+    <p><strong>WSGI</strong> stands for "Web Server Gateway Interface". It is used to forward requests from a web server (such as Apache or NGINX) to a backend Python web application or framework. From there, responses are then passed back to the webserver to reply to the requestor. A WSGI server is necessary for Python web applications since a web server cannot communicate directly with Python. WSGI is an interface between a web server and a Python-based web application.</p>
     <img src="img/WSGI.png" alt="WSGI">
     <p>Requests are sent from the client's browser to the server. WSGI forwards the request to the webserver python app, which then returns the completed request back to the webserver and on to the browser</p>
     <h3>Components</h3>
@@ -135,6 +136,7 @@ Now, in the modern web world, we have less of static data and more of dynamic da
 
 A template contains variables which are replaced by the values which are passed in when the template is rendered. Variables are helpful with the dynamic data.</p>
 
+<!--
 ```
 /app
    -/app.py
@@ -148,7 +150,7 @@ A template contains variables which are replaced by the values which are passed 
 ```
 app = Flask(__name__, template_folder='../pages/templates')
 ```
-
+-->
 <h3>Delimiters</h3>
 <ul></ul>
     <li> {%....%} are for statements</li>
@@ -157,12 +159,46 @@ app = Flask(__name__, template_folder='../pages/templates')
     <li> #....## are used as line statements</li>
 </ul>
 
+<p>Below is an example showing how to use expressions to show variables <i>title</i> and <i>username</i> in output.</p>
+
+```html
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <h1>Hello {{ username }}</h1>
+    </body>
+</html>
+```
+
+<a href="#templates">See more in templates</a>
+
 </div>
 <div id="werkzeug">
     <h2>Werkzeug</h2>
+<p>Werkzeug is a collection of libraries that can be used to create a WSGI(Web Server Gateway Interface) compatible web application in Python
+
+Werkzeug provides the following functionality (<i>which Flask uses)</i>:</p>
+<ol>
+    <li>Request processing</li>
+    <li>Response handling</li>
+    <li>URL Routing</li>
+    <li>Middleware</li>
+    <li>HTTP utilities</li>
+    <li>Exception handling</li>
+</ol>
+
+<p>It also provides a basic development server with hot reloading.</p>
+
+<a href="Werkzeug/README.md">See more in the Werkzeug README</a>
+
 </div>
 <div id="flask-installation-setup">
     <h2>Installing and Setting Up Flask</h2>
+</div>
+<div id="templates">
+    <h2>Templates</h2>
 </div>
 <div id="deploying-flask">
     <h2>Deploying a Flask app</h2>
@@ -191,3 +227,5 @@ app = Flask(__name__, template_folder='../pages/templates')
 []()
 
 </div>
+
+<a href="#beginning">Go to the beginning of the page</a>
