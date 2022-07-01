@@ -1,0 +1,110 @@
+:root {
+  /* color variables */
+  --clr-primary: #495159;
+  --clr-background: #F4F3EE;
+  --clr-table-header: #A1E8CC;
+  --clr-table-row: #C5DECD;
+  --clr-table-row-alternative: #E5D4C0;
+  --clr-button: #E5D4C0;
+  --clr-button-hover: #FAC9B8;
+
+  /* border radius */
+  --radius: 0.2rem;
+}
+
+
+/* Overall Styling
+ *****************/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--clr-background);
+  color: var(--clr-primary);
+  font-family: Verdana, sans-serif;
+}
+
+
+/* Header Styling
+ ****************/
+h1 {
+  text-align: center;
+}
+
+
+/* Table Styling
+ ***************/
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: .9rem;
+  margin-top: 1rem;
+}
+
+td, th {
+  border: 1px solid #DDD;
+  padding: 1.0rem 0.8rem;
+  overflow: hidden;
+}
+
+th {
+  padding-bottom: .8rem;
+  border-top: 2px solid #DDD;
+  border-bottom: 4px solid #DDD;
+  text-align: left;
+  background-color: var(--clr-table-header);
+}
+
+tbody tr {
+  background-color: var(--clr-table-row);
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--clr-table-row-alternative);
+}
+
+
+/* Error Page Styling
+ ********************/
+.error-description {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+
+/* Form Styling
+ **************/
+.form-container {
+  display: flex;
+  justify-content: center;
+}
+
+.field {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+button {
+  background-color: var(--clr-button);
+  max-width: 20ch;
+  padding: 4px 8px;
+  font-size: 1.2em;
+  border-radius: var(--radius);
+  border: none;
+}
+
+button:hover {
+  background-color: var(--clr-button-hover);
+  cursor: pointer;
+}
