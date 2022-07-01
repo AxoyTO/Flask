@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="form-container">
+    <form method="post">
+        <div class="field">
+            <label for="movieTitle">Movie Title:</label>
+            <input type="text" id="movieTitle" name="title"/>
+        </div>
+        <div class="field">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
