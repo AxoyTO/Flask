@@ -412,6 +412,110 @@ def create_app():
 
 <div id="form-processing">
     <h2>Form Processing</h2>
+
+In order to allow the user to add a movie to the Redis storage, we need to add a new view function in `url_map`:
+
+```py
+def __init__(self, config):
+    
+    ...
+
+    self.url_map = Map([
+        Rule('/', endpoint='index', methods=['GET']),
+        Rule('/movies', endpoint='movies', methods=['GET']),
+        Rule('/add_movie', endpoint='add_movie', methods=['GET', 'POST']),
+    ])
+
+    ...
+
+```
+
+The `rule` entries in `url_map` have been expanded to specify the HTTP methods that are allowed for each URL. Additionally, the '/movie' URL has been added:
+
+```py
+Rule('/movie', endpoint='add_movie', methods=['GET', 'POST']),
+```
+
+If the '/add' URL is requested with either the GET or POST methods, then the `movie()` view function will be called.
+
+Now we need to create that `add_movie()` view function in the `MovieApp` class.
+
+```py
+from werkzeug.utils import redirect
+```
+
+```py
+def add_movie(self, request):
+    if request.method == 'POST':
+        movie_title = request.form['title']
+        self.redis.lpush('movies', movie_title)
+        return redirect('/movies')
+    return self.render_template('add_movie.html')
+```
+
+If a GET request is made to '/add', then `add_movie()` will render the <i>templates/add_movie.html</i> file. If a POST request is made to '/add', then the form data is stored in the Redis storage in the `movies` list and the user is redirected to the list of movies.
+
+Let's create the <i>templates/add_movie.html</i> template file:
+
+```html
+{% extends "base.html" %}
+
+{% block body %}
+<div class="form-container">
+    <form method="post">
+        <div class="field">
+            <label for="movieTitle">Movie Title:</label>
+            <input type="text" id="movieTitle" name="title"/>
+        </div>
+        <div class="field">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+```
+
+<h2>Display Movies</h2>
+
+So that we are not storing the movies in Redis, the `movies()` view function needs to be updated to read from the `movies` list in Redis:
+
+```py
+def movies(self, request):
+    movies = self.redis.lrange('movies', 0, -1)
+    return self.render_template('movies.html', movies=movies)
+```
+
+The list of movies is being passed to the <i>templates/movies.html</i> template file, which needs to be updated to loop through this list to create the table of movies:
+
+```html
+{% extends "base.html" %}
+
+{% block body %}
+<div class="table-container">
+    <table>
+        <!-- Table Header -->
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Movie Title</th>
+            </tr>
+        </thead>
+
+        <!-- Table Elements (Rows) -->
+        <tbody>
+            {% for movie in movies %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ movie }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+```
+
+
 </div>
 
 <div id="why-flask">
