@@ -514,10 +514,33 @@ The list of movies is being passed to the <i>templates/movies.html</i> template 
 </div>
 {% endblock %}
 ```
-
-
 </div>
 
 <div id="why-flask">
     <h2>Why Flask instead of Werkzeug?</h2>
+
+Werkzeug provides much of the key functionality found in Flask, but Flask adds a number of powerful features, like:
+
+<ol>
+    <li>Sessions</li>
+    <li>Application and Request contexts</li>
+    <li>Blueprints</li>
+    <li>Request callback functions</li>
+    <li>Utilities: 
+        <ol>
+            <li>@route decorator</li>
+            <li>url_for() function</li>
+        </ol>
+    </li>
+    <li>CLI commands</li>
+    <li>Exception handling</li>
+    <li>Test client</li>
+    <li>Flask shell</li>
+    <li>Logging</li>
+    <li>Signals</li>
+    <li>Extensions</li>
+</ol>
+
+<strong>As with any web framework — Don't re-invent the wheel! Flask is a much better option (when compared to Werkzeug) for web development based on its rich feature set and large collection of extensions.</strong>
+
 </div>
