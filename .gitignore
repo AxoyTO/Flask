@@ -12,3 +12,7 @@
 *.pyc
 *tempCodeRunner*
 photo-*.jpg
+
+#Environment
+*\venv
+*/venv
