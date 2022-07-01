@@ -4,6 +4,7 @@ from werkzeug.wrappers import Request, Response
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.utils import redirect
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -20,8 +21,9 @@ class MovieApp(object):
 
         self.url_map = Map(
             [
-                Rule("/", endpoint="index"),
-                Rule("/movies", endpoint="movies"),
+                Rule("/", endpoint="index", methods=["GET"]),
+                Rule("/movies", endpoint="movies", methods=["GET"]),
+                Rule("/add_movie", endpoint="add_movie", methods=["GET", "POST"]),
             ]
         )
 
@@ -56,6 +58,14 @@ class MovieApp(object):
 
     def movies(self, request):
         return self.render_template("movies.html")
+
+    def add_movie(self, request):
+        """Adds a movie to the list of favorite movies."""
+        if request.method == "POST":
+            movie_title = request.form["title"]
+            self.redis.lpush("movies", movie_title)
+            return redirect("/movies")
+        return self.render_template("add_movie.html")
 
     def error404(self):
         response = self.render_template("404.html")
