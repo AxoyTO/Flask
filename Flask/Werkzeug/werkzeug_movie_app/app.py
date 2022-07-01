@@ -57,7 +57,9 @@ class MovieApp(object):
         return self.render_template("base.html")
 
     def movies(self, request):
-        return self.render_template("movies.html")
+        """Displays the list of favorite movies."""
+        movies = self.redis.sort("movies", alpha=True)
+        return self.render_template("movies.html", movies=movies)
 
     def add_movie(self, request):
         """Adds a movie to the list of favorite movies."""
