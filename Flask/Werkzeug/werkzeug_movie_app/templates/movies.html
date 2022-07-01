@@ -13,18 +13,12 @@
 
         <!-- Table Elements (Rows) -->
         <tbody>
+            {% for movie in movies %}
             <tr>
-                <td>1</td>
-                <td>Knives Out</td>
+                <td>{{loop.index}}</td>
+                <td>{{movie}}</td>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>Pirates of the Caribbean</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Inside Man</td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
