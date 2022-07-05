@@ -13,10 +13,18 @@
 *.pyc
 *tempCodeRunner*
 photo-*.jpg
+.coverage
+htmlcov/
+
+instance/
+dist/
+build/
+*.egg-info/
 
 #Environment
 *\venv
 */venv
 
 #Cache
-__pycache__
+__pycache__/
+.pytest_cache/
