@@ -17,3 +17,6 @@ photo-*.jpg
 #Environment
 *\venv
 */venv
+
+#Cache
+__pycache__
