@@ -8,7 +8,6 @@
 [Views and Blueprints](#views)
 [Templates](#templates)
 [Static Files](#statics)
-[Blog Blueprint](#blog)
 [Making the Project Installable](#install)
 [Test Coverage](#tests)
 [Deploy to Production](#deploy)
@@ -486,6 +485,66 @@ The `url_for()` function generates the URL to a view based on a name and argumen
 
 When using a blueprint, the name of the blueprint is prepended to the name of the function, so the endpoint for the login function we wrote above is `'auth.login'` because we added it to the `'auth'` blueprint.
 
+<div id="blog">
+    <h3>Blog Blueprint</h3>
+
+The blog should list all posts, allow logged in users to create posts, and allow the author of a post to edit or delete it.
+
+Inside `flaskr/blog.py`:
+
+```py
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, url_for
+)
+from werkzeug.exceptions import abort
+
+from flaskr.auth import login_required
+from flaskr.db import get_db
+
+bp = Blueprint('blog', __name__)
+```
+
+Inside `flaskr/__init__.py`:
+
+```py
+def create_app():
+    app = ...
+    # existing code omitted
+
+    from . import blog
+    app.register_blueprint(blog.bp)
+    app.add_url_rule('/', endpoint='index')
+
+    return app
+```
+
+Unlike the auth blueprint, the blog blueprint does not have a `url_prefix`. So the index view will be at /, the create view at /create, and so on. The blog is the main feature of Flaskr, so it makes sense that the blog index will be the main index.
+
+However, the endpoint for the index view defined below will be `blog.index`. Some of the authentication views referred to a plain index endpoint. `app.add_url_rule()` associates the endpoint name 'index' with the `/` url so that `url_for('index')` or `url_for('blog.index')` will both work, generating the same `/` URL either way.
+
+<h3>Index</h3>
+
+The index will show all of the posts, most recent first. A `JOIN` is used so that the author information from the `user` table is available in the result.
+
+Inside `flaskr/blog.py`:
+
+```py
+@bp.route('/')
+def index():
+    db = get_db()
+    posts = db.execute(
+        'SELECT p.id, title, body, created, author_id, username'
+        ' FROM post p JOIN user u ON p.author_id = u.id'
+        ' ORDER BY created DESC'
+    ).fetchall()
+    return render_template('blog/index.html', posts=posts)
+```
+
+See <a href="templates/blog/index.html">`flaskr/templates/blog/index.html`</a> for index layout of our project.
+
+When a user is logged in, the **header** block adds a link to the `create` view. When the user is the author of a post, they’ll see an “Edit” link to the `update` view for that post. `loop.last` is a special variable available inside Jinja for loops. It’s used to display a line after each post except the last one, to visually separate them.
+
+
 </div>
 
 <div id="templates">
@@ -605,7 +664,7 @@ Now that the authentication templates are written, we can register a user by goi
 </div>
 
 <div id="statics">
-    <h2>Static Fİles</h2>
+    <h2>Static Files</h2>
 
 CSS can be added to add style to the HTML layout we constructed. The style won’t change, so it’s a static file rather than a template.
 
@@ -621,8 +680,6 @@ After styling, the page should look like:
 
 </div>
 
-<div id="blog">
-    <h2>Blog Blueprint</h2>
 </div>
 
 <div id="install">
@@ -636,3 +693,5 @@ After styling, the page should look like:
 <div id="deploy">
     <h2>Deploying to Production</h2>
 </div>
+
+[Go to the beginning of the page](#beginning)
