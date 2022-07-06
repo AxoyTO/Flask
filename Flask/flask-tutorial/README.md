@@ -490,10 +490,135 @@ When using a blueprint, the name of the blueprint is prepended to the name of th
 
 <div id="templates">
     <h2>Templates</h2>
+
+The template files will be stored in the `templates directory` inside the flaskr package.
+
+Templates are files that contain static data as well as placeholders for dynamic data. A template is rendered with specific data to produce a final document. Flask uses the `Jinja` template library to render templates.
+
+In our application, we will use templates to render HTML which will display in the user’s browser. **In Flask, Jinja is configured to autoescape any data that is rendered in HTML templates.** This means that it’s safe to render user input; any characters they’ve entered that could mess with the HTML, such as `<` and `>` will be escaped with safe values that look the same in the browser but don’t cause unwanted effects.
+
+Jinja looks and behaves mostly like Python. Special delimiters are used to distinguish Jinja syntax from the static data in the template. **Anything between {{ and }} is an expression that will be output to the final document. {% and %} denotes a control flow statement like if and for.** Unlike Python, blocks are denoted by start and end tags rather than indentation since static text within a block could change indentation.
+
+<h3>The Base Layout</h3>
+
+Each page in the application will have the same basic layout around a different body. Instead of writing the entire HTML structure in each template, each template will **extend** a base template and override specific sections.
+
+in `flaskr/templates/base.html`:
+
+```html
+<!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+  <h1>Flaskr</h1>
+  <ul>
+    {% if g.user %}
+      <li><span>{{ g.user['username'] }}</span>
+      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+      <li><a href="{{ url_for('auth.register') }}">Register</a>
+      <li><a href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </ul>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>
+```
+
+**g** is automatically available in templates. Based on if **g.user** is set (from `load_logged_in_user()`), either the username and a log out link are displayed, or links to register and log in are displayed. `url_for()` is also automatically available, and is used to generate URLs to views instead of writing them out manually.
+
+After the page title, and before the content, the template loops over each message returned by `get_flashed_messages()`. We used `flash()` in the views to show error messages, and this is the code that will display them.
+
+There are three blocks defined here that will be overridden in the other templates:
+
+1. `{% block title %}` will change the title displayed in the browser’s tab and window title.
+
+2. `{% block header %}` is similar to title but will change the title displayed on the page.
+
+3. `{% block content %}` is where the content of each page goes, such as the login form or a blog post.
+
+The base template is directly in the `templates` directory. To keep the others organized, the templates for a blueprint will be placed in a directory with the same name as the blueprint.
+
+<h3>Register Layout</h3>
+
+in `flaskr/templates/auth/register.html`:
+```html
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input type="submit" value="Register">
+  </form>
+{% endblock %}
+```
+
+`{% extends 'base.html' %}` tells Jinja that this template should replace the blocks from the base template. All the rendered content must appear inside `{% block %}` tags that override blocks from the base template.
+
+A useful pattern used here is to place `{% block title %}` inside `{% block header %}`. This will set the title block and then output the value of it into the header block, so that both the window and page share the same title without writing it twice.
+
+The `input` tags are using the `required` attribute here. This tells the browser not to submit the form until those fields are filled in. If the user is using an older browser that doesn’t support that attribute, or if they are using something besides a browser to make requests, we still want to validate the data in the Flask view. It’s important to always fully validate the data on the server, even if the client does some validation as well.
+
+<h3>Log In Layout</h3>
+
+This is identical to the register template except for the title and submit button.
+
+Inside `flaskr/templates/auth/login.html`: 
+
+```html
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input type="submit" value="Log In">
+  </form>
+{% endblock %}
+```
+
+<h3>Registering a User</h3>
+
+Now that the authentication templates are written, we can register a user by going to <a href="http://127.0.0.1:5000/auth/register">http://127.0.0.1:5000/auth/register</a>.
+
+
 </div>
 
 <div id="statics">
     <h2>Static Fİles</h2>
+
+CSS can be added to add style to the HTML layout we constructed. The style won’t change, so it’s a static file rather than a template.
+
+Flask automatically adds a static view that takes a path relative to the `flaskr/static` directory and serves it. The base.html template already has a link to the style.css file:
+`{{ url_for('static', filename='style.css') }}`
+
+Besides CSS, other types of static files might be files with JavaScript functions, or a logo image. They are all placed under the `flaskr/static` directory and referenced with `url_for('static', filename='...')`.
+
+<a href="static/style.css">Check the styling in `flaskr/static/style.css`.</a>
+
+After styling, the page should look like:
+<img src="img/readme-styled-register.png" alt="Styled Register & Login">
+
 </div>
 
 <div id="blog">
