@@ -196,7 +196,34 @@ Werkzeug provides the following functionality (<i>which Flask uses)</i>:</p>
 </div>
 <div id="flask-installation-setup">
     <h2>Installing and Setting Up Flask</h2>
+
+Installing the `Flask` dependency should be enough to be able to use it in the project.
+
+
+Let's create our tutorial project in a new directory called `flask-tutorial` and install dependencies(Flask) in a virtual environment. 
+
+```sh
+$ mkdir flask-tutorial
+$ cd flask-tutorial
+$ python3 -m venv venv
+$ venv\Scripts\Activate
+$ pip install Flask
+```
+
+A `Flask` app can be as simple as a single file, such like:
+
+```py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello, World!'
+```
+
 </div>
+
 <div id="templates">
     <h2>Templates</h2>
 </div>
