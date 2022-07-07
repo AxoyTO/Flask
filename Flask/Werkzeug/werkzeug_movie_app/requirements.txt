@@ -15,7 +15,7 @@ cloud-init==22.1
 cmake==3.22.3
 cmdtest==0.32+git
 configobj==5.0.6
-cookiecutter==1.7.3
+cookiecutter==2.1.1
 cryptography==2.8
 dbus-python==1.2.16
 decorator==4.4.2
