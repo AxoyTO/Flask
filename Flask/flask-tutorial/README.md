@@ -807,12 +807,533 @@ After styling, the page should look like:
     <h2>Making the Project Installable</h2>
 </div>
 
+- Currently, Python and Flask understand how to use the flaskr package only because you’re running from your project’s directory. Installing means you can import it no matter where you run from.
+
+- You can manage your project’s dependencies just like other packages do, so pip install yourproject.whl installs them.
+
+- Test tools can isolate your test environment from your development environment.
+
+<h3>Describe the Project</h3>
+
+setup.py is a file that contains the code that installs the project. It describes the project’s dependencies and how to install them.
+
+```py
+from setuptools import setup
+
+setup(
+    name='flaskr',
+    version='1.0.0',
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        'flask',
+    ],
+)
+```
+
+`packages` tells Python what package directories (and the Python files they contain) to include. `find_packages()` finds these directories automatically so you don’t have to type them out. To include other files, such as the static and templates directories, `include_package_data` is set. Python needs another file named **MANIFEST.in** to tell what this other data is.
+
+`MANIFEST.in` contains a line that tells Python to include the static and templates directories.
+
+```in
+include flaskr/schema.sql
+graft flaskr/static
+graft flaskr/templates
+global-exclude *.pyc
+```
+
+This tells Python to copy everything in the static and templates directories, and the `schema.sql` file, but to exclude all bytecode files.
+
+<h3>Installing the Project</h3>
+
+Use pip to install your project in the virtual environment.
+
+```sh
+$ pip install -e .
+```
+
+This tells pip to find `setup.py` in the current directory and install it in *editable* or *development* mode. Editable mode means that as you make changes to your local code, you’ll only need to re-install if you change the metadata about the project, such as its dependencies. Development mode means that you can run the project directly from the source code.
+
+You can observe that the project is now installed with `pip list` after `pip install -e .`.
+
 <div id="tests">
     <h2>Test Coverage</h2>
+
+Writing unit tests for your application lets you check that the code you wrote works the way you expect. Flask provides a test client that simulates requests to the application and returns the response data.
+
+The closer you get to 100% coverage, the more comfortable you can be that making a change won’t unexpectedly change other behavior. However, 100% coverage doesn’t guarantee that your application doesn’t have bugs. In particular, it doesn’t test how the user interacts with the application in the browser. Despite this, test coverage is an important tool to use during development.
+
+We’ll use pytest and coverage to test and measure your code. Install them both:
+
+```sh
+$ pip install pytest coverage
+```
+
+<h3>Setup and Fixtures</h3>
+
+The test code is located in the `tests` directory. This directory is *next* to the `flaskr` package, not inside it. The `tests/conftest.py` file contains setup functions called **fixtures** that each test will use. Tests are in Python modules that start with `test_`, and each test function in those modules also starts with `test_`.
+
+Each test will create a new temporary database file and populate some data that will be used in the tests. Let's write a SQL file to insert that data.
+
+Inside `tests/data.sql`:
+ 
+```sql
+INSERT INTO user (username, password)
+VALUES
+  ('test', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f'),
+  ('other', 'pbkdf2:sha256:50000$kJPKsz6N$d2d4784f1b030a9761f5ccaeeaca413f27f2ecb76d6168407af962ddce849f79');
+
+INSERT INTO post (title, body, author_id, created)
+VALUES
+  ('test title', 'test' || x'0a' || 'body', 1, '2018-01-01 00:00:00');
+```
+
+The **app()** `fixture` will call the factory and pass `test_config` to configure the application and database for testing instead of using local development configuration.
+
+Inside `tests/conftest.py`:
+ 
+```py
+import os
+import tempfile
+
+import pytest
+from flaskr import create_app
+from flaskr.db import get_db, init_db
+
+with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
+    _data_sql = f.read().decode('utf8')
+
+
+@pytest.fixture
+def app():
+    db_fd, db_path = tempfile.mkstemp()
+
+    app = create_app({
+        'TESTING': True,
+        'DATABASE': db_path,
+    })
+
+    with app.app_context():
+        init_db()
+        get_db().executescript(_data_sql)
+
+    yield app
+
+    os.close(db_fd)
+    os.unlink(db_path)
+
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
+
+
+@pytest.fixture
+def runner(app):
+    return app.test_cli_runner()
+```
+
+- `tempfile.mkstemp()` creates and opens a temporary file, returning the file descriptor and the path to it. The DATABASE path is overridden so it points to this temporary path instead of the instance folder. After setting the path, the database tables are created and the test data is inserted. After the test is over, the temporary file is closed and removed.
+
+**TESTING** tells Flask that the app is in test mode. Flask changes some internal behavior so it’s easier to test, and other extensions can also use the flag to make testing them easier.
+
+The client **fixture** calls **app.test_client()** with the application object created by the app fixture. Tests will use the client to make requests to the application without running the server.
+
+The runner fixture is similar to client. `app.test_cli_runner()` creates a runner that can call the Click commands registered with the application.
+
+Pytest uses fixtures by matching their function names with the names of arguments in the test functions. For example, the test_hello function we’ll write next takes a client argument. Pytest matches that with the client fixture function, calls it, and passes the returned value to the test function.
+
+<h3>Factory</h3>
+
+Inside `tests/factory.py`
+
+```py
+from flaskr import create_app
+
+
+def test_config():
+    assert not create_app().testing
+    assert create_app({'TESTING': True}).testing
+
+
+def test_hello(client):
+    response = client.get('/hello')
+    assert response.data == b'Hello, World!'
+```
+
+<h3>Database</h3>
+
+Within an application context, `get_db` should return the same connection each time it’s called. After the context, the connection should be closed.
+
+Inside `tests/test_db.py`:
+
+```py
+import sqlite3
+
+import pytest
+from flaskr.db import get_db
+
+
+def test_get_close_db(app):
+    with app.app_context():
+        db = get_db()
+        assert db is get_db()
+
+    with pytest.raises(sqlite3.ProgrammingError) as e:
+        db.execute('SELECT 1')
+
+    assert 'closed' in str(e.value)
+```
+
+The `init-db` command should call the `init_db()` function and output a message.
+
+```py
+def test_init_db_command(runner, monkeypatch):
+    class Recorder(object):
+        called = False
+
+    def fake_init_db():
+        Recorder.called = True
+
+    monkeypatch.setattr('flaskr.db.init_db', fake_init_db)
+    result = runner.invoke(args=['init-db'])
+    assert 'Initialized' in result.output
+    assert Recorder.called
+```
+
+This test uses Pytest’s `monkeypatch` fixture to replace the `init_db` function with one that records that it’s been called. The `runner` fixture we wrote above is used to call the init-db command by name.
+
+<h3>Authentication</h3>
+
+For most of the views, a user needs to be logged in. The easiest way to do this in tests is to make a `POST` request to the `login` view with the client. Rather than writing that out every time, we can write a class with methods to do that, and use a fixture to pass it the client for each test.
+
+Inside `tests/conftest.py`:
+```py
+class AuthActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def login(self, username='test', password='test'):
+        return self._client.post(
+            '/auth/login',
+            data={'username': username, 'password': password}
+        )
+
+    def logout(self):
+        return self._client.get('/auth/logout')
+
+
+@pytest.fixture
+def auth(client):
+    return AuthActions(client)
+```
+
+With the `auth` fixture, we can call `auth.login()` in a test to log in as the test user, which was inserted as part of the test data in the app fixture.
+
+The `register` view should render successfully on **GET**. On **POST** with valid form data, it should redirect to the login URL and the user’s data should be in the database. Invalid data should display error messages.
+
+Inside `tests/test_auth.py`:
+```py
+import pytest
+from flask import g, session
+from flaskr.db import get_db
+
+
+def test_register(client, app):
+    assert client.get('/auth/register').status_code == 200
+    response = client.post(
+        '/auth/register', data={'username': 'a', 'password': 'a'}
+    )
+    assert response.headers["Location"] == "/auth/login"
+
+    with app.app_context():
+        assert get_db().execute(
+            "SELECT * FROM user WHERE username = 'a'",
+        ).fetchone() is not None
+
+
+@pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('', '', b'Username is required.'),
+    ('a', '', b'Password is required.'),
+    ('test', 'test', b'already registered'),
+))
+def test_register_validate_input(client, username, password, message):
+    response = client.post(
+        '/auth/register',
+        data={'username': username, 'password': password}
+    )
+    assert message in response.data
+``` 
+
+`client.get()`   makes a **GET** request and returns the Response object returned by Flask. Similarly, `client.post()` makes a **POST** request, converting the data dict into form data.
+
+To test that the page renders successfully, a simple request is made and checked for a **200 OK** `status_code`. If rendering failed, Flask would return a **500 Internal Server Error** code.
+
+**headers** will have a `Location` header with the login URL when the register view redirects to the login view.
+
+**data** contains the body of the response as bytes. If you expect a certain value to render on the page, check that it’s in data. Bytes must be compared to bytes. If you want to compare text, use **get_data(as_text=True)** instead.
+
+`pytest.mark.parametrize` tells Pytest to run the same test function with different arguments. You use it here to test different invalid input and error messages without writing the same code three times.
+
+The tests for the `login` view are very similar to those for register. Rather than testing the data in the database, session should have `user_id` set after logging in.
+
+```py
+def test_login(client, auth):
+    assert client.get('/auth/login').status_code == 200
+    response = auth.login()
+    assert response.headers["Location"] == "/"
+
+    with client:
+        client.get('/')
+        assert session['user_id'] == 1
+        assert g.user['username'] == 'test'
+
+
+@pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('a', 'test', b'Incorrect username.'),
+    ('test', 'a', b'Incorrect password.'),
+))
+def test_login_validate_input(auth, username, password, message):
+    response = auth.login(username, password)
+    assert message in response.data
+```
+
+
+Using `client` in a **with** block allows accessing context variables such as session **after** the response is returned. Normally, accessing session outside of a request would raise an error.
+
+Testing `logout` is the opposite of `login`. **session** should not contain `user_id` after logging out.
+
+
+```py
+def test_logout(client, auth):
+    auth.login()
+
+    with client:
+        auth.logout()
+        assert 'user_id' not in session
+```
+
+<h3>Blog</h3>
+
+All the `blog` views use the auth fixture we wrote earlier. Call `auth.login()` and subsequent requests from the client will be logged in as the test user.
+
+The index view should display information about the post that was added with the test data. When logged in as the author, there should be a link to edit the post.
+
+We can also test some more authentication behavior while testing the index view. When not logged in, each page shows links to log in or register. When logged in, there’s a link to log out.
+
+
+Inside `tests/test_blog.py`:
+
+```py
+import pytest
+from flaskr.db import get_db
+
+
+def test_index(client, auth):
+    response = client.get('/')
+    assert b"Log In" in response.data
+    assert b"Register" in response.data
+
+    auth.login()
+    response = client.get('/')
+    assert b'Log Out' in response.data
+    assert b'test title' in response.data
+    assert b'by test on 2018-01-01' in response.data
+    assert b'test\nbody' in response.data
+    assert b'href="/1/update"' in response.data
+```
+
+A user must be logged in to access the `create`, `update`, and `delete` views. The logged in user must be the author of the post to access update and delete, otherwise a 403 Forbidden status is returned. If a post with the given id doesn’t exist, update and delete should return 404 Not Found.
+
+```py
+@pytest.mark.parametrize('path', (
+    '/create',
+    '/1/update',
+    '/1/delete',
+))
+def test_login_required(client, path):
+    response = client.post(path)
+    assert response.headers["Location"] == "/auth/login"
+
+
+def test_author_required(app, client, auth):
+    # change the post author to another user
+    with app.app_context():
+        db = get_db()
+        db.execute('UPDATE post SET author_id = 2 WHERE id = 1')
+        db.commit()
+
+    auth.login()
+    # current user can't modify other user's post
+    assert client.post('/1/update').status_code == 403
+    assert client.post('/1/delete').status_code == 403
+    # current user doesn't see edit link
+    assert b'href="/1/update"' not in client.get('/').data
+
+
+@pytest.mark.parametrize('path', (
+    '/2/update',
+    '/2/delete',
+))
+def test_exists_required(client, auth, path):
+    auth.login()
+    assert client.post(path).status_code == 404
+```
+
+The create and update views should render and return a **200 OK** status for a `GET` request. When valid data is sent in a POST request, create should insert the new post data into the database, and update should modify the existing data. Both pages should show an error message on invalid data.
+
+    
+```py
+def test_create(client, auth, app):
+    auth.login()
+    assert client.get('/create').status_code == 200
+    client.post('/create', data={'title': 'created', 'body': ''})
+
+    with app.app_context():
+        db = get_db()
+        count = db.execute('SELECT COUNT(id) FROM post').fetchone()[0]
+        assert count == 2
+
+
+def test_update(client, auth, app):
+    auth.login()
+    assert client.get('/1/update').status_code == 200
+    client.post('/1/update', data={'title': 'updated', 'body': ''})
+
+    with app.app_context():
+        db = get_db()
+        post = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
+        assert post['title'] == 'updated'
+
+
+@pytest.mark.parametrize('path', (
+    '/create',
+    '/1/update',
+))
+def test_create_update_validate(client, auth, path):
+    auth.login()
+    response = client.post(path, data={'title': '', 'body': ''})
+    assert b'Title is required.' in response.data
+```
+
+The `delete` view should redirect to the index URL and the post should no longer exist in the database.
+
+```py
+def test_delete(client, auth, app):
+    auth.login()
+    response = client.post('/1/delete')
+    assert response.headers["Location"] == "/"
+
+    with app.app_context():
+        db = get_db()
+        post = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
+        assert post is None
+```
+
+<h3>Running the Tests</h3>
+
+Some extra configuration, which is not required but makes running tests with coverage less verbose, can be added to the project’s `setup.cfg` file.
+
+```cfg
+[tool:pytest]
+testpaths = tests
+
+[coverage:run]
+branch = True
+source =
+    flaskr
+```
+
+To run the tests, use the `pytest` command. It will find and run all the test functions we’ve written.
+
+![PyTest Demo](img/pytest-demo.png)
+
+If any tests fail, pytest will show the error that was raised. We can run `pytest -v` to get a list of each test function rather than dots.
+
+![PyTest Verbose](img/pytest-verbose-demo.png)
+
+To measure the code coverage of our tests, we use the coverage command to run pytest instead of running it directly.
+
+```sh
+$ coverage run -m pytest
+```
+
+We can either view a simple coverage report in the terminal:
+
+![PyTest Coverage](img/coverage-report.png)
+
 </div>
 
 <div id="deploy">
     <h2>Deploying to Production</h2>
+
+<h3>Build and Install</h3>
+
+When you want to deploy your application elsewhere, you build a distribution file. The current standard for Python distribution is the wheel format, with the .whl extension. Let's make sure the wheel library is installed first:
+
+```sh
+$ pip install wheel
+```
+
+Run the `setup.py` script to build the distribution file.
+
+```sh
+$ python setup.py bdist_wheel
+```
+
+You can find the file in `dist/flaskr-1.0.0-py3-none-any.whl`. The file name is in the format of `{project name}-{version}-{python tag} -{abi tag}-{platform tag}`.
+
+Copy this file to another machine, set up a new virtualenv, then install the file with pip.
+
+```sh
+$ pip install flaskr-1.0.0-py3-none-any.whl
+```
+
+Pip will install your project along with its dependencies.
+
+Since this is a different machine, you need to run init-db again to create the database in the instance folder.
+
+```sh
+$ export FLASK_APP=flaskr
+$ flask init-db
+```
+
+<h3>Configure the Secret Key</h3>
+
+In the beginning of the tutorial that you gave a default value for SECRET_KEY. This should be changed to some random bytes in production. Otherwise, attackers could use the public 'dev' key to modify the session cookie, or anything else that uses the secret key.
+
+You can use the following command to output a random secret key:
+
+```sh
+$ python -c 'import secrets; print(secrets.token_hex())'
+# This will print a secret key.
+```
+
+Create the `config.py` file in the instance folder, which the factory will read from if it exists. Copy the generated value into it.
+
+We can also set any other necessary configuration here, although SECRET_KEY is the only one needed for Flaskr.
+
+<h3>Run with a Production Server</h3>
+
+When running publicly rather than in development, we should not use the built-in development server (`flask run`). The development server is provided by Werkzeug for convenience, but is not designed to be particularly efficient, stable, or secure.
+
+Instead, use a production WSGI server. For example, to use **Waitress**, first install it in the virtual environment:
+
+```sh
+$ pip install waitress
+```
+
+We need to tell Waitress about our app, but it doesn’t use FLASK_APP like flask run does. We need to tell it to import and call the application factory to get an application object.
+
+```sh
+$ waitress-serve --call 'flaskr:create_app'
+
+Serving on http://0.0.0.0:8080
+```
+
+Waitress is just an example, chosen for the tutorial because it supports both Windows and Linux. There are many more WSGI servers and deployment options that you may choose for your project.
+
 </div>
 
 [Go to the beginning of the page](#beginning)
