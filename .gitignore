@@ -2,6 +2,10 @@
 !/**/
 !*.*
 
+Projects/flask-blog/flaskblog/static/profile_pics/*.jpeg
+Projects/flask-blog/flaskblog/static/profile_pics/*.jpg
+Projects/flask-blog/flaskblog/static/profile_pics/*.png
+
 .idea
 *.zip
 *.txt
