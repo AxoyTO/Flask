@@ -1,6 +1,7 @@
 import pytz
 from datetime import datetime
-from flaskblog import db, login_manager
+from zoneinfo import ZoneInfo
+from flaskblog import db, login_manager, app
 from flask_login import UserMixin
 
 
@@ -13,7 +14,8 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
+    image_file = db.Column(db.String(20), nullable=False,
+                           default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
 
@@ -24,10 +26,9 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    tr_tz = pytz.timezone("Europe/Istanbul")
-    date_posted = db.Column(
-        db.DateTime, nullable=False, default=tr_tz.localize(datetime.now())
-    )
+
+    date_posted = db.Column(db.DateTime, nullable=False,
+                            default=lambda: datetime.now(tz=ZoneInfo('localtime')))
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
