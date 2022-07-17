@@ -29,7 +29,7 @@ def send_reset_email(user):
     msg.sender = "noreply@demo.com"
     msg.recipients = [user.email]
     msg.body = f"""To reset your password, visit the following link:
-{url_for('reset_token', token=token, _external=True)}
+{url_for('users.reset_token', token=token, _external=True)}
 
 Please be aware that the link will expire in {int(link_expiration_time/60 + link_expiration_time%60)} minutes.
 

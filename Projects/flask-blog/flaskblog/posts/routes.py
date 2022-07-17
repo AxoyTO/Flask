@@ -8,9 +8,7 @@ from flaskblog.posts.forms import PostForm
 posts_bp = Blueprint('posts', __name__)
 
 
-posts_bp.route("/post/new", methods=["GET", "POST"])
-
-
+@posts_bp.route("/post/new", methods=["GET", "POST"])
 @login_required
 def create_post():
     form = PostForm()
@@ -21,24 +19,20 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         flash("Successfully created a new post!", "success")
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
 
     return render_template(
         "create_post.html", title="New Post", form=form, legend="Create a new post"
     )
 
 
-posts_bp.route("/post/<int:post_id>")
-
-
+@posts_bp.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post.html", title="Update Post", post=post)
 
 
-posts_bp.route("/post/<int:post_id>/update", methods=["GET", "POST"])
-
-
+@posts_bp.route("/post/<int:post_id>/update", methods=["GET", "POST"])
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -50,7 +44,7 @@ def update_post(post_id):
         post.content = form.content.data
         db.session.commit()
         flash("Successfully updated the post!", "success")
-        return redirect(url_for("post", post_id=post.id))
+        return redirect(url_for("posts.post", post_id=post.id))
 
     form.title.data = post.title
     form.content.data = post.content
@@ -63,9 +57,7 @@ def update_post(post_id):
     )
 
 
-posts_bp.route("/post/<int:post_id>/delete", methods=["POST"])
-
-
+@posts_bp.route("/post/<int:post_id>/delete", methods=["POST"])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -74,4 +66,4 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash("Successfully deleted the post!", "success")
-    return redirect(url_for("home"))
+    return redirect(url_for("main.home"))
