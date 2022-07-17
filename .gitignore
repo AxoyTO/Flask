@@ -32,5 +32,3 @@ build/
 #Cache
 __pycache__/
 .pytest_cache/
-
-*config.py
