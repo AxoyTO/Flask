@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
                            default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship("Post", backref="author", lazy=True)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
 
     def get_reset_token(self, expires_sec=1800):
         reset_token = jwt.encode(
@@ -58,6 +59,7 @@ class Post(db.Model):
                             default=lambda: datetime.datetime.now(tz=ZoneInfo('localtime')))
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    is_announcement = db.Column(db.Boolean, nullable=True, default=False)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
