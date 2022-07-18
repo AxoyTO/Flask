@@ -14,7 +14,10 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(
-            title=form.title.data, content=form.content.data, author=current_user
+            title=form.title.data,
+            content=form.content.data,
+            author=current_user,
+            is_announcement=form.announcement.data
         )
         db.session.add(post)
         db.session.commit()
@@ -36,18 +39,21 @@ def post(post_id):
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post.author != current_user:
+    if post.author != current_user and current_user.is_admin == False:
         abort(403)
     form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        post.is_announcement = form.announcement.data
+        print(form.announcement.data, post.is_announcement)
         db.session.commit()
         flash("Successfully updated the post!", "success")
         return redirect(url_for("posts.post", post_id=post.id))
 
     form.title.data = post.title
     form.content.data = post.content
+    form.announcement.data = post.is_announcement
     return render_template(
         "create_post.html",
         title="Update Post",
@@ -61,9 +67,15 @@ def update_post(post_id):
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post.author != current_user:
+    if post.author != current_user and current_user.is_admin == False:
         abort(403)
     db.session.delete(post)
     db.session.commit()
     flash("Successfully deleted the post!", "success")
     return redirect(url_for("main.home"))
+
+
+@posts_bp.route('/announcements')
+def announcements():
+    posts = Post.query.filter_by(is_announcement=True).paginate(per_page=5)
+    return render_template('announcements.html', posts=posts)
