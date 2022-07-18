@@ -4,7 +4,10 @@
         <div class="media">
             <img class="rounded-circle account-img" src="{{img_file}}" alt="Profile Image">
             <div class="media-body">
-                <h2 class="account-heading">{{ current_user.username }}</h2>
+                <h2 class="account-heading">{{ current_user.username }} 
+                    {% if current_user.is_admin %}
+                        <small class="text-muted"><input style="width:120px" type="text" value="Admin" class="readonly" disabled></small>
+                    {% endif %}</h2>
                 <p class="text-secondary">{{current_user.email}}</p>
             </div>
         </div>

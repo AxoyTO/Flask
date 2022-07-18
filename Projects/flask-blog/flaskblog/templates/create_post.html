@@ -20,7 +20,6 @@
                 </div>
                 <div class="form-group">
                     {{form.content.label(class="form=control-label")}}
-
                     {% if form.content.errors %}
                         {{form.content(class="form-control form-control-lg is-invalid")}}
                         <div class="invalid-feedback">
@@ -32,6 +31,21 @@
                          {{form.content(class="form-control form-control-lg")}}
                     {% endif %}
                 </div>
+                {% if current_user.is_admin %}
+                <div class="form-group">
+                    {{form.announcement.label(class="form=control-label")}}
+                    {% if form.announcement.errors %}
+                        {{form.announcement(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.announcement.errors %}
+                                <span>{{error}}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                         {{form.announcement(class="form-control form-control-lg")}}
+                    {% endif %}
+                </div>
+                {% endif %}
             </fieldset>
             <div class="form-group">
                 {{form.submit(class="btn btn-outline-info")}}

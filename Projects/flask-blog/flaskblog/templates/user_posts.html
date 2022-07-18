@@ -6,8 +6,16 @@
           <img class="rounded-circle article-img" src="{{url_for('static', filename='profile_pics/' + post.author.image_file)}}" alt="">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username)}}">{{ post.author.username }}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y, %H:%M:%S') }}</small>
+              <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username)}}">{{ post.author.username }}
+                {% if post.author.is_admin %}
+                  <small><input type="text" class="readonly" value="Admin", disabled></small>
+                {% endif %}
+              </a>
+              <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y, %H:%M:%S') }}
+                {% if post.is_announcement %}
+                  <input type="text" class="readonly" value="Announcement" disabled>
+                {% endif %}
+              </small>
             </div>
             <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
