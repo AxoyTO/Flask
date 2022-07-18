@@ -5,7 +5,7 @@
     <div class="media-body">
       <div class="article-metadata">
         <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}
-          {% if current_user.is_admin %}
+          {% if post.author.is_admin %}
           <small class="text-muted">
             <input type="text" value="Admin" class="readonly" disabled>
           </small>
