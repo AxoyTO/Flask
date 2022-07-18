@@ -4,7 +4,12 @@ body {
   margin-top: 5rem;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #444444;
 }
 
@@ -62,7 +67,30 @@ a.article-title:hover {
   text-decoration: none;
 }
 
-.article-svg {
+input[value="Admin"] {
+  background: #a83232;
+  width: 60px;
+}
+
+input[value="Announcement"] {
+  margin-left: 15px;
+  align-items: flex-end;
+  float: right;
+}
+
+.readonly {
+  margin-bottom: 5px;
+  width: 100px;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  box-sizing: border-box;
+  border: double;
+  background: #db4c42;
+  display: inline;
+}
+
+​.article-svg {
   width: 25px;
   height: 25px;
   vertical-align: middle;
