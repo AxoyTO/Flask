@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 style="color:red">Admins</h1><hr>
+{% for admin in admins %}
+    <h5 class="{% if not loop.last %} mb-1 {% endif %}"><a href="{{url_for('users.user_posts', username=admin.username)}}">{{admin.username}}</a>
+    {% if current_user.is_admin %}
+      - <a href="mailto:{{admin.email}}">{{admin.email}}</a>
+    {% endif %}
+    </h5>
+{% endfor %}
+<hr>
+<h1 style="color:gray">Users</h1><hr>
+{% for user in users.items %}
+    <h5 class="{% if not loop.last %} mb-1 {% endif %}"><a href="{{url_for('users.user_posts', username=user.username)}}">{{user.username}}</a>
+    {% if current_user.is_admin %}
+      - <a href="mailto:{{user.email}}">{{user.email}}</a>
+    {% endif %}
+    </h5>
+{% endfor %}
+{% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+          {% if users.page == page_num %}
+            <a class="btn btn-info mb-4" href="{{url_for('users.users', page=page_num) }}">{{page_num}}</a>
+          {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{url_for('users.users', page=page_num) }}">{{page_num}}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+    {% endfor %}
+<hr>
+{% endblock content %}
