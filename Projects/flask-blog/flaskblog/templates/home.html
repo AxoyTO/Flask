@@ -5,8 +5,20 @@
           <img class="rounded-circle article-img" src="{{url_for('static', filename='profile_pics/' + post.author.image_file)}}" alt="">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
-              <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y, %H:%M:%S') }}</small>
+              {% if post.author.is_admin %}
+                <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">
+                  {{ post.author.username }}
+                  <small class="text-muted">
+                    <input type="text" class="readonly" value="Admin" id="noselect" disabled></a>
+                  </small>
+              {% else %}
+                <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }} </a>              
+              {% endif %}
+              <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y, %H:%M:%S') }}
+                {% if post.is_announcement %}
+                  <input type="text" class="readonly" id="noselect" value="Announcement" disabled>
+                {% endif %}
+              </small>
             </div>
             <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
@@ -25,3 +37,13 @@
         {% endif %}
     {% endfor %}
 {% endblock content %}
+{% block sort %}
+  <div class="form-group">
+    <form action="" id="form" method="POST" class="selectform">
+      {{form.hidden_tag()}}
+      {{form.sort_by.label('Sort by:')}}
+      {{form.sort_by(class="form-control")}}
+      {{form.submit(class="btn btn-outline-info btn-sm mt-2")}}      
+      </form>
+  </div>
+{% endblock sort %}
