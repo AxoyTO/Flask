@@ -28,6 +28,8 @@ build/
 #Environment
 *\venv
 */venv
+*/env
+*\env
 
 #Cache
 __pycache__/
