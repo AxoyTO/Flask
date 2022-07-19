@@ -18,8 +18,11 @@
               </small>
             </div>
             <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
+            <p class="article-content">{{ post.content|truncate(250, True, end='...') }}</p>
+            {% if post.content|length > 250 %}
+              <a href="{{ url_for('posts.post', post_id=post.id) }}" class="link-info">Read More</a>
+            {% endif %}
+            </div>
         </article>
     {% endfor %}
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}

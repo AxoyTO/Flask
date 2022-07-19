@@ -44,3 +44,4 @@ Tree==0.2.4
 Werkzeug==2.1.2
 WTForms==3.0.1
 zipp==3.8.0
+uwsgi
