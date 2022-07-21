@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+{% block title %}Add Food{% endblock title %}
+{% block content %}
+<form class="form-f" action="" method="POST">
+    <fieldset>
+        <legend>Foods {% if request.args %}{% endif %}</legend>
+        {% if not food_upd %}
+            <details>
+            <summary><h5>Add Food</h5></summary>
+        {% endif %}
+        <div class="form-li">
+            <label for="name">Food Name</label>
+            {% if food_upd %}
+                <input type="text" name="foodname" id="name" value="{{food_upd.name}}" required/>
+            {% else %}
+                <input type="text" name="foodname" id="name" placeholder="Food Name" required/>
+            {% endif %}
+        </div>
+        <div class="form-li">
+            <label for="protein">Protein</label>
+            {% if not food_upd %}
+                <input type="number" name="protein" id="protein" placeholder="Protein" min="0" step="1" required/>
+            {% else %}
+                <input type="number" name="protein" id="protein" value="{{food_upd.protein}}" min="0" step="1" required/>
+            {% endif %}
+        </div>
+        <div class="form-li">
+            <label for="carbohydrates">Carbohydrates</label>
+            {% if not food_upd %}
+                <input type="number" name="carbohydrates" id="carbohydrates" placeholder="Carbohydrates" min="0" step="1" required/>
+            {% else %}
+                <input type="number" name="carbohydrates" id="carbohydrates" value="{{food_upd.carbohydrates}}" min="0" step="1" required/>
+            {% endif %}
+        </div>
+        <div class="form-li">
+            <label for="fat">Fat</label>
+            {% if not food_upd %}
+                <input type="number" name="fat" id="fat" placeholder="Fat" min="0" step="1" required/>
+            {% else %}
+                <input type="number" name="fat" id="fat" value={{food_upd.fat}} min="0" step="1" required/>
+            {% endif %}
+        </div>
+        {% if food_upd %}
+            <input class="button-7" type="submit" name="submit" value="Update">
+        {% else %}
+            <input class="button-7" type="submit" name="submit" value="Add">
+        {% endif %}
+        {% if not food_upd %}
+        </details>
+        {% endif %}
+        </fieldset>
+    <div class="items">
+        {% for food in results %}
+            <hr class="listhr">
+            <ul>
+                <li><span class="item-name">{{food.name}}</li>
+                <li><span class="item">Protein:</span> <span class="item-amount">{{food.protein}}</span> </li>
+                <li><span class="item">Carbs:</span> <span class="item-amount">{{food.carbohydrates}}</span> </li>
+                <li><span class="item">Fat:</span> <span class="item-amount">{{food.fat}}</span> </li>
+                <li><span class="item">Calories:</span> <span class="item-amount">{{food.calories}}</span></li>
+                <div class="anchor">
+                    <a href="{{url_for('foods.update', id=food.id)}}">Update</a>
+                    <a href="{{url_for('foods.delete', id=food.id)}}">Delete</a>
+                </div>
+            </ul>
+        {% endfor %}
+    </div>
+</form>
+{% endblock content %}

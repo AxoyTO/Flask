@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block title %}{{date}}{% endblock title %}
+{% block content %}
+    <div class="home-container">
+        <form class="detailed" action="" method="POST">
+            <legend>
+                <h4>{{date}}</h4>
+            </legend>
+            <div class="form-container">
+                <select class="food-selection" name="foods" id="foods">
+                        {% for food in foods %}
+                            <option name="food" id="food">
+                                {{food.name}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <input class="button-7" type="submit" name="submit" value="Add">
+                </div>
+                <hr>
+
+                <div class="food-container">
+                    <span class="item-name" style="margin-right:5%">Total</span>
+                    <span class="item">Protein: </span> <span class="item-amount">{{total_protein}}</span>
+                    <span class="item">Carbs: </span> <span class="item-amount">{{total_carbs}}</span>
+                    <span class="item">Fat: </span> <span class="item-amount">{{total_fat}}</span>
+                    <span class="item">Calories: </span> <span class="item-amount">{{total_cals}}</span>
+                </div>
+                <hr>
+                <div class="food-container">
+                    {% for i, food in e %}
+                        <span class="item-name" style="margin-right:5%">{{food.name}}</span>
+                        <span class="item">Protein: </span> <span class="item-amount">{{food.protein}}</span>
+                        <span class="item">Carbs: </span> <span class="item-amount">{{food.carbohydrates}}</span>
+                        <span class="item">Fat: </span> <span class="item-amount">{{food.fat}}</span>
+                        <span class="item">Calories: </span> <span class="item-amount">{{food.calories}}</span>
+                        <div class="anchor">
+                            <a href="{{url_for('dates.food_delete', date=date, id=ids[i])}}">Delete</a>
+                        </div>
+                        {% if not loop.last %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+        </form>
+    </div>
+    <form action=""></form>
+{% endblock content %}

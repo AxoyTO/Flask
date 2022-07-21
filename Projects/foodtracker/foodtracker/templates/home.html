@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<div class="home-container">
+    <div class="add-data">
+        <form action="" method="POST">
+            <label for="date">New Day</label>
+            <input type="date" name="date" id="date" value="{{today_date}}"/>
+            <input class="button-7" type="submit" value="Add" name="submit">
+        </form>
+    </div>
+    <hr>
+    <div class="date-container">
+        {% for i, date in e  %}
+            <div class="date-entry">
+                <h5>{{date.entry_date}}</h5>
+                <p>
+                    <span class="item home-i">Protein: </span> <span class="item-amount home-ia">{{nutritional_vals[i]['protein']}}</span>
+                    <span class="item home-i">Carbs: </span> <span class="item-amount home-ia">{{nutritional_vals[i]['carbs']}}</span>
+                    <span class="item home-i">Fat: </span> <span class="item-amount home-ia">{{nutritional_vals[i]['fat']}}</span>
+                    <span class="item home-i">Calories: </span> <span class="item-amount home-ia">{{nutritional_vals[i]['cals']}}</span>
+                    <a class="anchor-h" href="{{url_for('dates.date', date=results[i])}}" style="float:right; margin-right:1%;">View Detail</a>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
+
