@@ -1,4 +1,4 @@
-from flask import g, current_app
+from flask import g
 import sqlite3
 import os
 
@@ -13,10 +13,3 @@ def get_db():
         g.db.row_factory = sqlite3.Row
 
     return g.db
-
-def close_db(error):
-    db = g.pop('sqlite_db', None)
-    
-    if db is not None:
-        db.close()
-        current_app.teardown_appcontext()
