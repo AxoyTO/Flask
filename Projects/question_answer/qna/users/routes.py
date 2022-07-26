@@ -17,6 +17,10 @@ def login():
         user = db.execute(
             'SELECT * FROM users WHERE username = ?', [username]).fetchone()
 
+        if user is None:
+            flash('Invalid username or password', 'danger')
+            return redirect(url_for('users.login'))
+
         hashed_password = db.execute(
             'SELECT password FROM users WHERE username=?', [username]).fetchone()[0]
         if check_password_hash(hashed_password, password):
@@ -37,7 +41,7 @@ def login():
 
 @users_bp.route('/logout', methods=['GET', 'POST'])
 def logout():
-    username = session.pop('userarname', None)
+    username = session.pop('username', None)
     session.clear()
     if username:
         flash('Successfully logged out', 'success')
@@ -56,6 +60,11 @@ def register():
             request.form['password'], method='sha256')
         email = request.form['email']
         try:
+            if db.execute(
+                    'SELECT * FROM users WHERE username = ?', [username]).fetchone():
+                flash('Username already exists', 'danger')
+                raise Exception('Username already exists')
+
             db.execute('INSERT INTO users (username, password, email, expert, admin) VALUES(?, ?, ?, 0, 0)',
                        [username, hashed_password, email])
             db.commit()
