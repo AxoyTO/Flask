@@ -1,0 +1,34 @@
+{% extends 'layout.html' %} {% block title %}Login{% endblock title %} {% block
+content %}
+<div class="login-wrap">
+  <div class="login-html">
+    <input id="tab-1" type="radio" name="tab" class="sign-in" checked /><label
+      for="tab-1"
+      class="tab"
+      >Login</label
+    >
+    <div class="login-form">
+      <form action="" method="POST">
+        <div class="sign-in-htm">
+          <div class="group">
+            <label for="user" class="label">Username</label>
+            <input name="username" id="user" type="text" class="input" placeholder="Username" required/>
+          </div>
+          <div class="group">
+            <label for="pass" class="label">Password</label>
+            <input name="password" id="pass" type="password" class="input" data-type="password" placeholder="Password" required/>
+          </div>
+          <div class="group">
+            <input type="submit" class="button" value="Login"/>
+          </div>
+          <div class="hr"></div>
+          <div class="foot-lnk">
+            <a style="width: 35%" href="#forgot">Forgot Password?</a>
+            <a href="{{ url_for('users.register') }}">Register</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

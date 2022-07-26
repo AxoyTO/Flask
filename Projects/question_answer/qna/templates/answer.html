@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block title %}Answer{% endblock title %}
+{% block content %}
+    <div class="question-wrap">
+        <div class="question-form">
+            <form action="" method="POST" id="qform">
+                <legend>Answer the Question</legend>
+                <div class="question-group">
+                    <label for="question">Question from <span style="color:#ec6611">{{asked_by}}</span></label>
+                    <textarea class="disabled-text" name="question" id="question" cols="20" rows="5" readonly>{{question.question_text}}</textarea>
+                    
+                    <label for="answer">Your answer</label>
+                    <textarea spellcheck="true" autofocus="true" minlength="10" maxlength="600" placeholder="Enter your answer here" namerows="5" cols="60" name="answer" id="answer" form="qform" required></textarea>
+                    <input type="checkbox" name="terms" id="terms" required checked>
+                    <label for="terms">I hereby confirm that this answer is related to the question and does not contain anything that may include any kind of illegal activity.</label>
+                    <input type="submit" name="submit" value="Answer">
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

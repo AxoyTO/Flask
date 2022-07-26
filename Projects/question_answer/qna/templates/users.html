@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% block title %}Users{% endblock title %}
+{% block content %}
+<div class="users-wrap no-border">
+    <div class="users-container">
+        <div class="users-header">
+            <span>&#x1F451 Admins</span>
+        </div>
+        <ul class="users-list">
+            {% for admin in admins %}
+                <li>
+                    {{admin.username}}
+                    {% if admin.expert %}
+                        <input class="expert-ic" type="text" name="expert" id="expert" value="EXPERT" disabled/>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="users-container">
+        <div class="users-header">
+            Users  
+        </div>
+        <ul class="users-list">
+            {% for user in users %}
+                <li>
+                    {{user.username}}
+                    {% if user.expert %}
+                        <input class="expert-ic" type="text" name="expert" id="expert" value="EXPERT" disabled/>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}

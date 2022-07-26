@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <title>Q&A | {% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <img src="{{ url_for('static', filename='img/qalogo.png') }}" alt="Logo of QA">
+            <ul>
+                <li class="fl ml-2"><a href="{{ url_for('main.home') }}">Home</a></li>
+                <li class="fl"><a href="{{ url_for('main.about') }}">About</a></li>
+                <li class="fl"><a href="{{ url_for('users.users') }}">Users</a></li>
+                {% if session['username'] %}
+                    <li class="fl"><a href="{{ url_for('questions.ask') }}">Ask Question</a></li>
+                {% endif %}
+                {% if session['expert'] %}
+                    <li class="fl"><a href="{{ url_for('questions.answer') }}">Answer Questions</a></li>
+                {% endif %}
+            </ul>
+            <ul class="user-l">
+                {% if not session['id'] %}
+                    <li class="fl"><a href="{{ url_for('users.register') }}">Register</a></li>
+                    <li class="fl"><a href="{{ url_for('users.login') }}">Login</a></li>
+                {% else %}
+                    <li class="fl"><a href="#">Account</a></li>
+                    <li class="fl"><a href="{{ url_for('users.logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true)%}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div id="hideMe">
+                <div class="meter alert alert-{{category}}">
+                    {{message}}<span><span class="progress-{{category}}"></span></span>
+                </div>
+                
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock content %}
+</body>
+</html>

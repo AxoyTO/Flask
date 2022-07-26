@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block title %}Answer{% endblock title %}
+{% block content %}
+    <div class="home-wrap">
+        <div class="home-header">
+            <h1>Questions awaiting an answer</h1>
+        </div>
+        <div class="question-wrapper">
+            {% for question in questions_no_ans %}
+                <div class="question-content">
+                    <a class="question-link" href="{{ url_for('questions.answer_specific', id=question.id) }}">
+                        <div class="question-header">
+                            Question №: {{question.id}}
+                            <div class="question-asker">
+                                from {{asked_by[loop.index0]['username']}}
+                            </div>
+                            <div class="question-time">
+                                {{pretty_dates[loop.index0]}}
+                            </div>
+                        </div>
+                    </a>
+                    <div class="question-text">
+                        {{question.question_text}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

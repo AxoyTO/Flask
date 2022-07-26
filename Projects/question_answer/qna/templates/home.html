@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+    <div class="home-wrap">
+        <div class="home-header">
+            <h1>Answered questions</h1>
+        </div>
+        <div class="question-wrapper">
+            {% for question in questions_ans %}
+                <div class="question-content">
+                    <div class="question-header">
+                        Question №: {{question.id}}
+                        <div class="question-asker">
+                            from {{ans_asked_by[loop.index0]['username']}}
+                        </div>
+                        <div class="question-time">
+                            {{ans_pretty_dates[loop.index0]}}
+                        </div>
+                    </div>
+                    <div class="question-text">
+                        {{question.question_text}}
+                    </div>
+                    <hr>
+                    <div class="answer-text">
+                        <p><span style="font-weight:600; color:#ec6611">Answer by {{ans_answered_by[loop.index0]['username']}}:</span> {{question.answer_text}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="home-wrap">
+        <div class="home-header">
+            <h1>Questions awaiting an answer</h1>
+        </div>
+        <div class="question-wrapper">
+            {% for question in questions_no_ans %}
+                <div class="question-content">
+                    <div class="question-header">
+                        Question №: {{question.id}}
+                        <div class="question-asker">
+                            from {{no_ans_asked_by[loop.index0]['username']}}
+                        </div>
+                        <div class="question-time">
+                            {{no_ans_pretty_dates[loop.index0]}}
+                        </div>
+                    </div>
+                    <div class="question-text">
+                        {{question.question_text}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
