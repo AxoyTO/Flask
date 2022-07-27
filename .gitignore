@@ -1,6 +1,7 @@
 *
 !/**/
 !*.*
+!Procfile
 
 Projects/flask-blog/flaskblog/static/profile_pics/*.jpeg
 Projects/flask-blog/flaskblog/static/profile_pics/*.jpg
