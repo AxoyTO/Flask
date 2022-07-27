@@ -2,6 +2,29 @@
 {% block title %}Account{% endblock title %}
 {% block content %}
     <div class="acc-wrap">
-        <h1>{{user['username']}}'s Page</h1>
+        <div class="acc-container">
+            <div class="acc-title">
+                {{session['username']}}'s Page
+            </div>
+            <div class="acc-form-container">
+                <form action="" method="POST">
+                    <div class="acc-form-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" maxlength="12" id="username" value="{{session['username']}}">
+                    </div>
+                    <div class="acc-form-group">
+                        <label for="password">Password</label>
+                        <input type="password" maxlength="10" name="password" id="password">
+                    </div>
+                    <div class="acc-form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" value="{{session['email']}}">
+                    </div>
+                    <div class="button-group">
+                        <input class="form-button" type="submit" value="Update">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock content %}
