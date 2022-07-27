@@ -1,11 +1,12 @@
 from flask import g
 import psycopg2
 from psycopg2.extras import DictCursor
+import os
 
 
 def connect_db():
     conn = psycopg2.connect(
-        'postgres://zdlhwhjfwbjwhs:a4a9c1101e446e31a4411c509459d764c661bdef9716601064ac7644bad1752a@ec2-100-26-39-41.compute-1.amazonaws.com:5432/d1tgd5386cmf45', cursor_factory=DictCursor)
+        os.environ.get('AxoyQNA_PostgreSQL_DB'), cursor_factory=DictCursor)
     conn.autocommit = True
     sql = conn.cursor()
     return conn, sql
