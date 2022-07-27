@@ -15,9 +15,9 @@ def ask():
         db = get_db()
         question_text = request.form['question']
 
-        db.execute('INSERT INTO questions (question_text, asked_by_id) VALUES(?, ?)', [
-                   question_text, session['id']])
-        db.commit()
+        db.execute('INSERT INTO questions (question_text, asked_by_id) VALUES(%s, %s)', (
+                   question_text, session['id'],))
+
         flash("Question asked successfully", "success")
         return redirect(url_for('main.home'))
 
@@ -31,16 +31,17 @@ def answer():
         abort(403)
 
     db = get_db()
-    questions_no_ans = db.execute(
-        'SELECT * FROM questions WHERE answer_text IS NULL').fetchall()
+    db.execute('SELECT * FROM questions WHERE answer_text IS NULL')
+    questions_no_ans = db.fetchall()
 
-    asked_by = db.execute(
-        'SELECT username FROM users INNER JOIN questions ON users.id=questions.asked_by_id WHERE answer_text IS NULL').fetchall()
+    db.execute(
+        'SELECT username FROM users INNER JOIN questions ON users.id=questions.asked_by_id WHERE answer_text IS NULL')
+    asked_by = db.fetchall()
 
     pretty_dates = []
     for i in range(len(questions_no_ans)):
         pretty_dates.append(datetime.datetime.strptime(
-            questions_no_ans[i]['time'], '%Y-%m-%d %H:%M:%S').strftime('%B %d, %Y' + ' at ' + '%I:%M %p'))
+            str(questions_no_ans[i]['time']), '%Y-%m-%d %H:%M:%S').strftime('%B %d, %Y' + ' at ' + '%I:%M %p'))
 
     return render_template('awaiting_questions.html', questions_no_ans=questions_no_ans, pretty_dates=pretty_dates, asked_by=asked_by)
 
@@ -52,17 +53,17 @@ def answer_specific(id):
         abort(403)
 
     db = get_db()
-    question = db.execute(
-        'SELECT * FROM questions WHERE id=?', [id]).fetchone()
+    db.execute(
+        'SELECT * FROM questions WHERE id=%s', (id,))
+    question = db.fetchone()
 
-    asked_by = db.execute('SELECT username FROM users WHERE users.id=?', [
-                          question['asked_by_id']]).fetchone()[0]
-
+    db.execute('SELECT username FROM users WHERE users.id=%s',
+               (question['asked_by_id'],))
+    asked_by = db.fetchone()[0]
     if request.method == "POST":
         answer = request.form['answer']
         db.execute(
-            'UPDATE questions SET answer_text=?, expert_id=? WHERE id=?', [answer, session['id'], question['id']])
-        db.commit()
+            'UPDATE questions SET answer_text=%s, expert_id=%s WHERE id=%s', [answer, session['id'], question['id']])
         flash("Answer submitted successfully", "success")
         return redirect(url_for('main.home'))
 

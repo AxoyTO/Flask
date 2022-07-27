@@ -30,8 +30,8 @@
                     <li class="fl"><a href="{{ url_for('users.register') }}">Register</a></li>
                     <li class="fl"><a href="{{ url_for('users.login') }}">Login</a></li>
                 {% else %}
-                    <li class="fl"><a href="#">Account</a></li>
-                    <li class="fl"><a href="{{ url_for('users.logout') }}">Logout</a></li>
+                    <li class="fl"><a href="{{ url_for('users.account', id=session['id']) }}">Account</a></li>
+                    <li class="fl"><a href="{{ url_for('users.logout', updated=0) }}">Logout</a></li>
                 {% endif %}
             </ul>
         </div>

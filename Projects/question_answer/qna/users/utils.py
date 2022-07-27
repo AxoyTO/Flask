@@ -8,7 +8,7 @@ def get_current_user():
         user = session['username']
 
         db = get_db
-        user = db.execute(
-            'SELECT * FROM users WHERE username=?', [user]).fetchone()
+        db.execute('SELECT * FROM users WHERE username=%s', (user,))
+        user = db.fetchone()
 
     return user

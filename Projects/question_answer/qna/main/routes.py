@@ -10,27 +10,41 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/home')
 def home():
     db = get_db()
-    questions = None
     try:
-        questions_ans = db.execute(
-            'SELECT * FROM questions WHERE answer_text IS NOT NULL').fetchall()
-        questions_no_ans = db.execute(
-            'SELECT * FROM questions WHERE answer_text IS NULL').fetchall()
-        no_ans_asked_by = db.execute(
-            'SELECT username FROM users INNER JOIN questions ON users.id=questions.asked_by_id WHERE answer_text IS NULL').fetchall()
-        ans_asked_by = db.execute(
-            'SELECT username FROM users INNER JOIN questions ON users.id=questions.asked_by_id WHERE answer_text IS NOT NULL').fetchall()
-        ans_answered_by = db.execute(
-            'SELECT username FROM users INNER JOIN questions ON users.id=questions.expert_id').fetchall()
+        db.execute(
+            'SELECT * FROM questions WHERE answer_text IS NOT NULL')
+        questions_ans = db.fetchall()
+
+        db.execute('SELECT * FROM questions WHERE answer_text IS NULL')
+        questions_no_ans = db.fetchall()
+
+        db.execute(
+            'SELECT username FROM users INNER JOIN questions ON users.id=questions.asked_by_id WHERE answer_text IS NULL')
+        no_ans_asked_by = db.fetchall()
+
+        db.execute(
+            'SELECT username FROM users INNER JOIN questions ON users.id=questions.asked_by_id WHERE answer_text IS NOT NULL')
+        ans_asked_by = db.fetchall()
+
+        db.execute(
+            'SELECT username FROM users INNER JOIN questions ON users.id=questions.expert_id')
+        ans_answered_by = db.fetchall()
 
         ans_pretty_dates, no_ans_pretty_dates = [], []
         for i in range(len(questions_ans)):
-            ans_pretty_dates.append(datetime.datetime.strptime(
-                questions_ans[i]['time'], '%Y-%m-%d %H:%M:%S').strftime('%B %d, %Y' + ' at ' + '%I:%M %p'))
+            try:
+                ans_pretty_dates.append(datetime.datetime.strptime(
+                    str(questions_ans[i]['time']), '%Y-%m-%d %H:%M:%S').strftime('%B %d, %Y' + ' at ' + '%I:%M %p'))
+            except Exception as e:
+                raise abort("Error: " + str(e))
 
         for i in range(len(questions_no_ans)):
-            no_ans_pretty_dates.append(datetime.datetime.strptime(
-                questions_no_ans[i]['time'], '%Y-%m-%d %H:%M:%S').strftime('%B %d, %Y' + ' at ' + '%I:%M %p'))
+            try:
+                no_ans_pretty_dates.append(datetime.datetime.strptime(
+                    str(questions_no_ans[i]['time']), '%Y-%m-%d %H:%M:%S').strftime('%B %d, %Y' + ' at ' + '%I:%M %p'))
+            except Exception as e:
+                return "Error: " + str(e)
+
     except:
         abort(500)
     return render_template('home.html', questions_ans=questions_ans, questions_no_ans=questions_no_ans,
