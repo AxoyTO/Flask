@@ -15,11 +15,11 @@
 [Werkzeug](#werkzeug)
 [Installing and Setting Up Flask](#flask-installation-setup)
 [Templates](#templates)
-[Deploying a Flask app](#deploying-flask)
 [Signals](#signals)
 [Testing Flask Applications](#testing)
 [Logging](#logging)
 [Flask and Databases](#flask-databases)
+[Flask Libraries](#flask-libs)
 [References](#references)
 
 <div id="web-framework"><h2>Introduction - What is a Web Framework?</h2>
@@ -231,9 +231,6 @@ def hello():
 <div id="templates">
     <h2>Templates</h2>
 </div>
-<div id="deploying-flask">
-    <h2>Deploying a Flask app</h2>
-</div>
 <div id="signals">
     <h2>Signals</h2>
 </div>
@@ -245,6 +242,21 @@ def hello():
 </div>
 <div id="flask-databases">
     <h2>Flask and Databases</h2>
+</div>
+<div id="flask-libs">
+    <h2>Flask Libraries</h2>
+    <a href="">Flask-SQLAlchemy</a>
+    <a href="">Flask-WTF</a>
+    <a href="">Flask-Bootstrap</a>
+    <a href="">Flask-Mail</a>
+    <a href="">Flask-Migrates</a>
+    <a href="">Flask-Uploads</a>
+    <a href="">Flask-Login</a>
+    <a href="">Flask-Babel</a>
+    <a href="">Flask-User</a>
+    <a href="">Flask-Restless</a>
+    <a href="">Flask-SocketIO</a>
+    <a href="">Flask-Security</a>
 </div>
 
 ---
