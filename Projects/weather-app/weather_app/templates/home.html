@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from "macros.html" import renderform %}
+
+{% block title %}
+    Home
+{% endblock title %}
+
+{% block content %}
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ renderform(form.city) }}
+        <br>
+        {{ renderform(form.submit) }}
+    </form>
+
+    {% for weather in weather_data %}
+        <ul>
+            <li>Date: {{weather.date}} — Last check at {{weather.lastcheck}} </li>
+            <li>City: {{ weather.city }}, Lat:{{weather.lat}} — Lon: {{weather.lon}}</li>
+            <li>Temperature: {{ weather.temp }}, Max: {{weather.tempmax}} — Min: {{weather.tempmin}}</li>
+            <li>Feels Like: {{ weather.feelslike }}</li>
+            <li>Humidity: {{ weather.humidity }}</li>
+            <li>Pressure: {{ weather.pressure }}</li>
+            <li>Sunrise: {{ weather.sunrise }}</li>
+            <li>Sunset: {{ weather.sunset }}</li>
+            {% set file = 'img/'+weather.icon+'.png'%}
+            <li>Description: {{ weather.description }} <img style="width:2%" src="{{ url_for('static', filename=file) }}"></li>
+        </ul>
+    {% endfor %}
+{% endblock content %}
