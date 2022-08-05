@@ -4,7 +4,6 @@
     font-family: 'Varela Round', sans-serif;
 }
 
-
 .autocomplete {
     /*the container must be positioned relative:*/
     position: relative;
@@ -21,11 +20,25 @@ input {
 input[type=text] {
     background-color: #f1f1f1;
     width: 100%;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
 }
 
 input[type=submit] {
-    background-color: DodgerBlue;
+    background-color: #0e647a;
     color: #fff;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+
+input[type=submit]:hover {
+    cursor: pointer;
+    background-color: #1091b1;
+    color: #fff;
+}
+
+button:focus {
+    cursor: progress;
 }
 
 .autocomplete-items {
@@ -61,15 +74,12 @@ input[type=submit] {
 .grid-container {
     display: grid;
     grid-template-columns: auto auto auto;
-    background-color: #6fafe4;
-    padding: 10px;
+    justify-content: center;
 }
 
 .grid-item {
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid #ff926f;
-    box-shadow: 2px 2px 2px 2px #e06a42;
-    padding: 20px;
+    border: 1px solid #f06b3f;
+    background-color: #ebf4fc;
     font-size: 15px;
     width: 100%;
     text-align: center;
@@ -81,27 +91,85 @@ input[type=submit] {
 }
 
 .main-container {
+    position: static;
     margin: auto;
-    width: 80%;
+    width: 100%;
 }
 
-.loadbtn {
-    margin-left: 48%;
-    margin-right: 48%;
-    width: 4%;
+.main-wrapper {
+    margin: auto;
+    width: 90%;
+}
+
+.btns {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    width: 100%;
+}
+
+.btns-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    width: 20%;
+}
+
+.loadbtn,
+.deletebtn {
+    width: 100%;
     background-color: white !important;
     color: #007bff !important;
     border-color: white !important;
     border-radius: 100px !important;
 }
 
-.loadbtn:hover {
+.loadbtn:hover,
+.deletebtn:hover {
     background-color: #007bff !important;
     color: white !important;
 }
 
+.deletebtn {
+    color: rgb(221, 21, 21) !important;
+}
+
+.deletebtn:hover {
+    background-color: rgb(221, 21, 21) !important;
+}
+
+
+.grid-loadbtn {
+    float: right;
+    color: #007bff !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 100px !important;
+
+}
+
+.grid-loadbtn:hover {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+.grid-deletebtn {
+    float: right;
+    color: red !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 100px !important;
+}
+
+.grid-deletebtn:hover {
+    background-color: red !important;
+    color: white !important;
+}
+
 .nav-head {
-    margin-top: auto !important;
+    position: relative;
+    left: 0;
+    right: 0;
 }
 
 nav {
@@ -109,6 +177,7 @@ nav {
 }
 
 header {
+
     font-weight: 600;
     display: flex !important;
     justify-content: space-between !important;
@@ -148,4 +217,60 @@ header a:hover {
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+}
+
+.grid-item ul {
+    list-style-type: none;
+}
+
+.grid-item ul li img {
+    position: relative;
+    margin-right: 3%;
+    width: 8%;
+}
+
+.grid-item ul li {
+    margin-bottom: 1%;
+}
+
+.textimg {
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.textimg img {
+    width: 294px 294px;
+    display: inline-block;
+    margin-bottom: 5%;
+}
+
+.textimg li img {
+    margin-bottom: 2%;
+}
+
+.textimg h3,
+.textimg li {
+    text-align: middle;
+    position: relative;
+    left: -2%;
+}
+
+.avatar {
+    display: inline-block;
+    overflow: hidden;
+    line-height: 1;
+    vertical-align: middle;
+    background-color: var(--color-avatar-bg);
+    border-radius: 6px;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 1px var(--color-avatar-border);
+}
+
+
+.avatar-user {
+    border-radius: 50% !important;
+}
+
+.border {
+    border: 1px solid var(--color-border-default) !important;
 }
