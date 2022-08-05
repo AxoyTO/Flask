@@ -18,9 +18,11 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     csrf.init_app(app)
-    
+
     from weather_app.cities.routes import cities_bp
+    from weather_app.main.routes import main_bp
 
     app.register_blueprint(cities_bp)
+    app.register_blueprint(main_bp)
 
     return app
