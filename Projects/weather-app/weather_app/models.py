@@ -7,6 +7,7 @@ class City(db.Model):
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
     name = db.Column(db.String(50), nullable=False, unique=True)
+    countrycode = db.Column(db.String(6), nullable=False)
     tz = db.Column(db.String(60))
     date = db.Column(db.String)
     tempmax = db.Column(db.Float)
