@@ -173,12 +173,12 @@ $(function(){
     
     // on click, load the data dynamically into the #result div
     $("#loadButton").click(function(){
-        $("#result").load("http://localhost:5000/home/reload");
+        $("#result").load("https://axoyweather.herokuapp.com/home/reload");
     });
 
     $("#deleteButton").click(function(){
         if (confirm('Are you sure you want to wipe the database?')){
-            $("#result").load("http://localhost:5000/delete");
+            $("#result").load("https://axoyweather.herokuapp.com/delete");
         }
     });
 
@@ -209,7 +209,7 @@ function toggleReload(id) {
     });
 
       $.ajax({
-        url: `http://localhost:5000/home/reload/${id}`,
+        url: `https://axoyweather.herokuapp.com/home/reload/${id}`,
         cache: false
         }).done(function(data) {
             $("#result").html(data);
@@ -231,7 +231,7 @@ function toggleDelete(id) {
     });
 
       $.ajax({
-        url: `http://localhost:5000/delete/${id}`,
+        url: `https://axoyweather.herokuapp.com/delete/${id}`,
         cache: false
         }).done(function(data) {
             //if (confirm('Are you sure you want to wipe the database?')){
