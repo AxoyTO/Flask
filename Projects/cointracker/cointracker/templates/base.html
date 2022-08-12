@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" type="text/css">
+    <title>CoinTracker - {% block title %}{% endblock title %}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.css">
+</head>
+<body>
+    <div class="main-header">
+        <div class="stats-tab">
+            <div class="container">
+                <div class="stats-list">
+                    <ul>
+                        <li>Cryptocurrencies: <a href="">{{global_metrics[0]}}</a> </li>
+                        <li>Exchanges: <a href="">{{global_metrics[1]}}</a> </li>
+                        <li>Market Cap: <a href="">${{global_metrics[2]}}</a> </li>
+                        <li>24h Vol: <a href="">${{global_metrics[3]}}</a> </li>
+                        <li>Dominance: <a href="">BTC: {{global_metrics[4]}}% ETH: {{global_metrics[5]}}%</a> </li>
+                        <li>ETH Gas: <a href="">{{global_metrics[6]}} Gwei</a> </li>
+                    </ul>
+                </div>
+                <div class="user-buttons">
+                    <button><a href="#">Login</a></button>
+                    <button><a href="#">Sign up</a></button>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="nav-header">
+                <img src="{{ url_for('static', filename='img/coin.png') }}" alt="Title Image">
+                <a class="nav-title" title="Go to homepage" href="{{ url_for('main.home') }}">Coin Tracker</a>
+            </div>
+            <div class="nav-sections">
+                <div class="sections-container">
+                    <ul>
+                        <li><a href="#">Cryptocurrencies</a></li>
+                        <li><a href="#">Exchanges</a></li>
+                        <li><a href="#">Mining Stats</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {% block content %}{% endblock content %}
+</body>
+</html>

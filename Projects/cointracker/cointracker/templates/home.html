@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+
+<div class="main-body">
+    <div class="body-nav container">
+        <div class="body-nav-btns">
+            <a href="#"><button><i class="fa-solid fa-star" style="margin-right:5px"></i>Watchlist</button></a>
+            <a href="#"><button><i class="fa-brands fa-space-awesome" style="margin-right:5px"></i>Top Coins by Categories</button></a>
+        </div>
+    </div>
+    <div class="coins-tab">
+        <table class="coins-table">
+            <tr>
+                <th>#</th>
+                <th style="text-align:left">Name</th>
+                <th>Price</th>
+                <th>24h %</th>
+                <th>30d %</th>
+                <th>Market Cap</th>
+                <th>Volume(24h)</th>
+                <th>All Time High (ATH)</th>
+                <th>Last 7 Days</th>
+            </tr>
+            {% for coin in coins %}
+            <tr>
+                <td class="coin-item" style="padding-left:1%">{{ coin.market_cap_rank }}</td>
+                <td class="coin-item" style="text-align:left"> <img src="{{coin.image}}" alt="Coin Image"> {{ coin.name }} <span class="text-muted">{{coin.symbol}}</span></td>
+                <td class="coin-item">${{ coin.current_price }}</td>
+
+                <td class="coin-item">
+                    {% if "-" in coin.price_change_percentage_24h %}
+                        <i class="fa-solid fa-caret-down"></i><span style="color:rgb(237,83,92)"> {{ coin.price_change_percentage_24h }}%</span>
+                    {% else %}
+                        <i class="fa-solid fa-caret-up"></i><span style="color:rgb(63,209,154)"> {{ coin.price_change_percentage_24h }}%</span>
+                    {% endif %}
+                </td>
+                <td class="coin-item">
+                    {% if "-" in coin.price_change_percentage_30d_in_currency %}
+                        <i class="fa-solid fa-caret-down"></i><span style="color:rgb(237,83,92)"> {{ coin.price_change_percentage_30d_in_currency }}%</span>
+                    {% else %}
+                        <i class="fa-solid fa-caret-up"></i><span style="color:rgb(63,209,154)"> {{ coin.price_change_percentage_30d_in_currency }}%</span>
+                    {% endif %}
+                </td>
+                <td class="coin-item">${{ coin.market_cap }}</td>
+                <td class="coin-item">${{ coin.total_volume }}</td>
+                <td class="coin-item">${{ coin.ath }}
+                    <p>
+                        {% if coin.athcondition %}
+                        <span style="color:rgb(63,209,154)">{{coin.symbol}} is currently {{coin.percent_ath}}% above it's ATH.</span>
+                        {% else %}
+                        <span style="color:rgb(237,83,92)">{{coin.symbol}} is currently {{coin.percent_ath}}% below it's ATH.</span>
+                        {% endif %}
+                    </p>
+                </td>
+                <td class="coin-item"> — </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<canvas id="lineChart" width="164" height="48"></canvas>
+<script>
+
+</script>
+{% endblock content %}
