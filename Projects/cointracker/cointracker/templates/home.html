@@ -25,44 +25,99 @@
                 <th>Last 7 Days</th>
             </tr>
             {% for coin in coins %}
-            <tr>
-                <td class="coin-item" style="padding-left:1%">{{ coin.market_cap_rank }}</td>
-                <td class="coin-item" style="text-align:left"> <img src="{{coin.image}}" alt="Coin Image"> {{ coin.name }} <span class="text-muted">{{coin.symbol}}</span></td>
-                <td class="coin-item">${{ coin.current_price }}</td>
+                <tr>
+                    <td class="coin-item" style="padding-left:1%">{{ coin.market_cap_rank }}</td>
+                    <td class="coin-item" style="text-align:left"> <img src="{{coin.image}}" alt="Coin Image"> {{ coin.name }} <span class="text-muted">{{coin.symbol}}</span></td>
+                    <td class="coin-item">${{ coin.current_price }}</td>
 
-                <td class="coin-item">
-                    {% if "-" in coin.price_change_percentage_24h %}
-                        <i class="fa-solid fa-caret-down"></i><span style="color:rgb(237,83,92)"> {{ coin.price_change_percentage_24h }}%</span>
-                    {% else %}
-                        <i class="fa-solid fa-caret-up"></i><span style="color:rgb(63,209,154)"> {{ coin.price_change_percentage_24h }}%</span>
-                    {% endif %}
-                </td>
-                <td class="coin-item">
-                    {% if "-" in coin.price_change_percentage_30d_in_currency %}
-                        <i class="fa-solid fa-caret-down"></i><span style="color:rgb(237,83,92)"> {{ coin.price_change_percentage_30d_in_currency }}%</span>
-                    {% else %}
-                        <i class="fa-solid fa-caret-up"></i><span style="color:rgb(63,209,154)"> {{ coin.price_change_percentage_30d_in_currency }}%</span>
-                    {% endif %}
-                </td>
-                <td class="coin-item">${{ coin.market_cap }}</td>
-                <td class="coin-item">${{ coin.total_volume }}</td>
-                <td class="coin-item">${{ coin.ath }}
-                    <p>
-                        {% if coin.athcondition %}
-                        <span style="color:rgb(63,209,154)">{{coin.symbol}} is currently {{coin.percent_ath}}% above it's ATH.</span>
+                    <td class="coin-item">
+                        {% if "-" in coin.price_change_percentage_24h %}
+                            <i class="fa-solid fa-caret-down"></i><span style="color:rgb(237,83,92)"> {{ coin.price_change_percentage_24h }}%</span>
                         {% else %}
-                        <span style="color:rgb(237,83,92)">{{coin.symbol}} is currently {{coin.percent_ath}}% below it's ATH.</span>
+                            <i class="fa-solid fa-caret-up"></i><span style="color:rgb(63,209,154)"> {{ coin.price_change_percentage_24h }}%</span>
                         {% endif %}
-                    </p>
-                </td>
-                <td class="coin-item"> — </td>
-            </tr>
+                    </td>
+                    <td class="coin-item">
+                        {% if "-" in coin.price_change_percentage_30d_in_currency %}
+                            <i class="fa-solid fa-caret-down"></i><span style="color:rgb(237,83,92)"> {{ coin.price_change_percentage_30d_in_currency }}%</span>
+                        {% else %}
+                            <i class="fa-solid fa-caret-up"></i><span style="color:rgb(63,209,154)"> {{ coin.price_change_percentage_30d_in_currency }}%</span>
+                        {% endif %}
+                    </td>
+                    <td class="coin-item">${{ coin.market_cap }}</td>
+                    <td class="coin-item">${{ coin.total_volume }}</td>
+                    <td class="coin-item">${{ coin.ath }}
+                        <p>
+                            {% if coin.athcondition %}
+                            <span style="color:rgb(63,209,154)">{{coin.symbol}} is currently {{coin.percent_ath}}% above it's ATH.</span>
+                            {% else %}
+                            <span style="color:rgb(237,83,92)">{{coin.symbol}} is currently {{coin.percent_ath}}% below it's ATH.</span>
+                            {% endif %}
+                        </p>
+                    </td>
+                    <td class="coin-item">
+                        <!-- <canvas id="lineChart-{{coin.market_cap_rank}}" width="164" height="48"></canvas> -->
+                        {% set file = 'img/sparkline'+loop.index|string+'.png' %}
+                        <img class="sparkline" src="{{ url_for('static', filename=file) }}" alt="">
+                        <meta id="sparkline_vals" data-playlist="{{ sparkline_values[coin.market_cap_rank-1] }}">
+                    </td>
+                </tr>
             {% endfor %}
         </table>
     </div>
 </div>
-<canvas id="lineChart" width="164" height="48"></canvas>
-<script>
 
+<script>
+$(document).ready(function() {
+    var playlist_data = $('#sparkline_vals').data("playlist");
+    console.log(playlist_data)
+    for(idx = 1; idx<101; idx++){
+    var ctx = document.getElementById("lineChart-"+idx).getContext("2d")
+    var lineChart = new Chart(ctx, {
+        type: "line",
+        data:{
+            labels: {{ labels | safe }},
+            datasets: [{
+                data: {{ sparkline_values[1] | safe }},
+                fill: false,
+                borderColor: "rgb(75,192,192)",
+                lineTension: 0
+            }]
+        },
+        options:{
+            responsive: false,
+            plugins:{
+                legend: {
+                    display: false
+                    },
+                labels: {
+                    display: false
+                    }
+                },
+            elements: {
+                line: {
+                    borderColor: '#000000',
+                    borderWidth: 1
+                },
+                point: {
+                    radius: 0
+                },
+                tooltips: {
+                    enabled: false
+                },
+            },
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    display: false
+                }
+        }
+    }
+    })
+    }
+});
 </script>
+
 {% endblock content %}
