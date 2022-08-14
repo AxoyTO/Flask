@@ -7,6 +7,8 @@
 <div class="main-body">
     <div class="body-nav container">
         <div class="body-nav-btns">
+            <h1><i class="fa-brands fa-bitcoin"></i>  Top Cryptocurrencies by Market Cap</h1>
+            <br>
             <a href="#"><button><i class="fa-solid fa-star" style="margin-right:5px"></i>Watchlist</button></a>
             <a href="#"><button><i class="fa-brands fa-space-awesome" style="margin-right:5px"></i>Top Coins by Categories</button></a>
         </div>
@@ -66,58 +68,5 @@
         </table>
     </div>
 </div>
-
-<script>
-$(document).ready(function() {
-    var playlist_data = $('#sparkline_vals').data("playlist");
-    console.log(playlist_data)
-    for(idx = 1; idx<101; idx++){
-    var ctx = document.getElementById("lineChart-"+idx).getContext("2d")
-    var lineChart = new Chart(ctx, {
-        type: "line",
-        data:{
-            labels: {{ labels | safe }},
-            datasets: [{
-                data: {{ sparkline_values[1] | safe }},
-                fill: false,
-                borderColor: "rgb(75,192,192)",
-                lineTension: 0
-            }]
-        },
-        options:{
-            responsive: false,
-            plugins:{
-                legend: {
-                    display: false
-                    },
-                labels: {
-                    display: false
-                    }
-                },
-            elements: {
-                line: {
-                    borderColor: '#000000',
-                    borderWidth: 1
-                },
-                point: {
-                    radius: 0
-                },
-                tooltips: {
-                    enabled: false
-                },
-            },
-            scales: {
-                x: {
-                    display: false
-                },
-                y: {
-                    display: false
-                }
-        }
-    }
-    })
-    }
-});
-</script>
 
 {% endblock content %}
