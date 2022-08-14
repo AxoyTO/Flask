@@ -1,4 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+from cointracker.main.utils import draw_sparkline
+import datetime
+from cointracker import db
+from cointracker.models import Sparkline
 from cointracker.utils import get_json, get_eth_gas, get_gecko
 from numerize import numerize
 
@@ -54,8 +58,19 @@ def home():
         coin['price_change_percentage_30d_in_currency'] = f"{coin['price_change_percentage_30d_in_currency']:.2f}"
 
     sparkline_values = [i['sparkline_in_7d']['price'] for i in coins]
+    q = Sparkline.query.all()
+    if not q:
+        draw_sparkline(sparkline_values)
+        q = Sparkline(date_updated=datetime.datetime.now().date())
+        db.session.add(q)
+        db.session.commit()
+    else:
+        if q[0].date_updated != datetime.datetime.now().date():
+            draw_sparkline(sparkline_values)
+            q[0].date_updated = datetime.datetime.now().date()
+            db.session.commit()
 
-    return render_template('home.html', global_metrics=global_metrics, coins=coins, sparkline_values=sparkline_values[0])
+    return render_template('home.html', global_metrics=global_metrics, coins=coins, sparkline_values=sparkline_values)
 
 
 @ main_bp.route('/about')
