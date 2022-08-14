@@ -314,3 +314,8 @@ nav a:hover {
     background: rgb(50, 53, 70);
     border: 0px;
 }
+
+.sparkline {
+    width: 164px !important;
+    height: 48px !important;
+}
