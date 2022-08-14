@@ -4,6 +4,8 @@ body {
     --theme-color: #6188ff;
     --bg-color: #17171a;
     --border-color: #222531;
+    --bullish-green: rgb(63, 209, 154);
+    --bearish-red: rgb(237, 83, 92);
     background-color: rgb(23, 23, 26);
 }
 
@@ -213,7 +215,8 @@ nav a:hover {
     background: linear-gradient(rgb(34, 37, 49) 0%, rgba(34, 37, 49, 0) 413px);
 }
 
-.coins-tab {
+.coins-tab,
+.exchanges-tab {
     color: white;
     box-sizing: border-box;
     max-width: 1400px;
@@ -224,43 +227,71 @@ nav a:hover {
     margin-left: auto;
 }
 
-.coins-table {
+.coins-table,
+.exchanges-table {
     margin: auto;
     font-size: 12px;
     width: 100%;
     transform: translateZ(0px);
 }
 
-.coins-table th {
+.coins-table th,
+.exchanges-table th {
     color: rgba(28, 199, 221, 0.788);
     border-bottom: 1px solid white;
     padding: 1%;
 }
 
-.coins-table th:nth-child(n+2) {
+.coins-table th:nth-child(n+2),
+.exchanges-table th:nth-child(n+2) {
     border-left: 1px solid var(--border-color);
 }
 
-.coins-table td img {
+.coins-table td img,
+.exchanges-table td img {
     width: 20px;
     height: 20px;
     margin-right: 2%;
 }
 
 
-.coins-table td {
+.coins-table td,
+.exchanges-table td {
     border-bottom: 1px solid var(--border-color);
 }
 
-.coins-table td:nth-child(n+2) {
+.coins-table td:nth-child(n+2),
+.exchanges-table td:nth-child(n+2) {
     border-left: 1px solid var(--border-color);
 }
 
-.coin-item {
+.coin-item,
+.exchange-item {
     font-size: 14px;
     font-weight: 600;
     padding: 2%;
     text-align: center;
+}
+
+.exchange-item img {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+.exchange-item a {
+    text-decoration: none;
+}
+
+.exchange-item a,
+.exchange-item a:hover,
+.exchange-item a:focus,
+.exchange-item a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.exchange-item a:hover {
+    color: var(--theme-color);
 }
 
 .text-muted {
