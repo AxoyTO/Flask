@@ -3,7 +3,7 @@ from cointracker.main.utils import draw_sparkline
 import datetime
 from cointracker import db
 from cointracker.models import Sparkline
-from cointracker.utils import get_json, get_eth_gas, get_gecko
+from cointracker.utils import get_cmc, get_eth_gas, get_gecko, get_global_metrics
 from numerize import numerize
 
 main_bp = Blueprint('main', __name__)
@@ -12,21 +12,7 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 @main_bp.route('/home')
 def home():
-    global_metrics = get_json(
-        'https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest')
 
-    total_coins = global_metrics['data']['active_cryptocurrencies']
-    total_exchanges = global_metrics['data']['active_exchanges']
-    total_mcap = numerize.numerize(float(
-        global_metrics['data']['quote']['USD']['total_market_cap']))
-    total_24h_vol = numerize.numerize(float(
-        global_metrics['data']['quote']['USD']['total_volume_24h']))
-    btc_dom = f"{global_metrics['data']['btc_dominance']:.1f}"
-    eth_dom = f"{global_metrics['data']['eth_dominance']:.1f}"
-    eth_gas = int(get_eth_gas()['blockPrices'][0]['baseFeePerGas'])
-
-    global_metrics = [total_coins, total_exchanges,
-                      total_mcap, total_24h_vol, btc_dom, eth_dom, eth_gas]
 
     coins = get_gecko(
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d")
@@ -70,7 +56,7 @@ def home():
             q[0].date_updated = datetime.datetime.now().date()
             db.session.commit()
 
-    return render_template('home.html', global_metrics=global_metrics, coins=coins, sparkline_values=sparkline_values)
+    return render_template('home.html', global_metrics=get_global_metrics(), coins=coins, sparkline_values=sparkline_values)
 
 
 @ main_bp.route('/about')
