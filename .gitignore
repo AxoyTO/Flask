@@ -34,6 +34,10 @@ build/
 */env
 *\env
 
+#Graphs and Images
+*/sparkline*
+*\sparkline*
+
 #Cache
 __pycache__/
 .pytest_cache/
