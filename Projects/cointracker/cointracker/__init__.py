@@ -15,7 +15,9 @@ def create_app(config_class=Config):
     csrf.init_app(app)
 
     from cointracker.main.routes import main_bp
+    from cointracker.exchanges.routes import exchanges_bp
 
     app.register_blueprint(main_bp)
+    app.register_blueprint(exchanges_bp)
 
     return app
