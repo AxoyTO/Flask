@@ -16,12 +16,12 @@
             <div class="container">
                 <div class="stats-list">
                     <ul>
-                        <li>Cryptocurrencies: <a href="{{ url_for('main.home') }}">{{global_metrics[0]}}</a> </li>
-                        <li>Exchanges: <a href="{{ url_for('exchanges.exchanges') }}">{{global_metrics[1]}}</a> </li>
-                        <li>Market Cap: <a href="">${{global_metrics[2]}}</a> </li>
-                        <li>24h Vol: <a href="">${{global_metrics[3]}}</a> </li>
-                        <li>Dominance: <a href="">BTC: {{global_metrics[4]}}% ETH: {{global_metrics[5]}}%</a> </li>
-                        <li>ETH Gas: <a href="">{{global_metrics[6]}} Gwei</a> </li>
+                        <li>Cryptocurrencies: <a href="#">{{global_metrics[0]}}</a> </li>
+                        <li>Exchanges: <a href="#">{{global_metrics[1]}}</a> </li>
+                        <li>Market Cap: <a href="#">${{global_metrics[2]}}</a> </li>
+                        <li>24h Vol: <a href="#">${{global_metrics[3]}}</a> </li>
+                        <li>Dominance: <a href="#">BTC: {{global_metrics[4]}}% ETH: {{global_metrics[5]}}%</a> </li>
+                        <li>ETH Gas: <a href="#">{{global_metrics[6]}} Gwei</a> </li>
                     </ul>
                 </div>
                 <div class="user-buttons">
@@ -38,8 +38,8 @@
             <div class="nav-sections">
                 <div class="sections-container">
                     <ul>
-                        <li><a href="#">Cryptocurrencies</a></li>
-                        <li><a href="#">Exchanges</a></li>
+                        <li><a href="{{ url_for('main.home') }}">Cryptocurrencies</a></li>
+                        <li><a href="{{ url_for('exchanges.exchanges') }}">Exchanges</a></li>
                         <li><a href="#">Mining Stats</a></li>
                     </ul>
                 </div>
