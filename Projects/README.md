@@ -1,0 +1,1 @@
+Before running any project, build it using "docker compose up --build"
