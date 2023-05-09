@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  orderbox:
+  flaskblog:
     image: app/flaskblog
     container_name: flaskblog
     build: 
