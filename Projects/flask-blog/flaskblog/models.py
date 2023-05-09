@@ -56,7 +56,7 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
 
     date_posted = db.Column(db.DateTime, nullable=False,
-                            default=lambda: datetime.datetime.now(tz=ZoneInfo('localtime')))
+                            default=lambda: datetime.datetime.now())
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     is_announcement = db.Column(db.Boolean, nullable=True, default=False)
