@@ -1,6 +1,7 @@
 *
 !/**/
 !*.*
+!Dockerfile
 !Procfile
 
 Projects/flask-blog/flaskblog/static/profile_pics/*.jpeg
@@ -23,7 +24,7 @@ photo-*.jpg
 .coverage
 htmlcov/
 
-instance/
+#instance/
 dist/
 build/
 *.egg-info/
