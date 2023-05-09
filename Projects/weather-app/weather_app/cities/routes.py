@@ -23,13 +23,14 @@ def home():
         if not is_valid_city(city.title()):
             flash(f"Can't find city: {city}", 'error')
             return redirect(url_for('cities.home'))
-
+        
         db_city = City.query.filter_by(name=city).first()
 
-        if not db_city:
+        if db_city is None:
             URL = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{city}?unitGroup=metric&include=days%2Ccurrent%2Cevents%2Calerts&key={API_KEY}&contentType=json"
             try:
                 response = requests.get(URL)
+                print(response)
                 if response.status_code != 200:
                     raise HTTPException(response.status_code)
             except HTTPException as e:
@@ -67,6 +68,7 @@ def reload_all():
 def reload(id):
     city = City.query.filter_by(id=id).first()
     URL = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{city.name}?unitGroup=metric&include=days%2Ccurrent%2Cevents%2Calerts&key={API_KEY}&contentType=json"
+    print(city)
     try:
         response = requests.get(URL)
         if response.status_code != 200:

@@ -34,7 +34,7 @@
             </form>
             <div class="btns">
                 <div class="btns-wrapper">
-                    <button class="loadbtn btn btn-primary" id="loadButton">Refresh All <i class="fa fa-refresh" style="font-size:24px" aria-hidden="true"></i></button>
+                    <button class="loadbtn btn btn-primary" id="loadButton" onclick="window.location.href='/home/reload'">Refresh All <i class="fa fa-refresh" style="font-size:24px" aria-hidden="true"></i></button>
                     <button class="deletebtn btn btn-primary" id="deleteButton">Delete All <i class="fa fa-refresh" style="font-size:24px" aria-hidden="true"></i></button>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     <ul>
                         {% set file = 'img/'+city.icon+'.png'%}
                         <img style="display:inline; position:relative; right:-8%" src="{{ url_for('static', filename=file) }}">
-                        <h5><img style="width:8%" src="https://countryflagsapi.com/png/{{city.countrycode}}" alt="Flag"/> {{ city.name }}</h5>
+                        <h5><img style="width:8%" src="https://flagsapi.com/{{city.countrycode}}/shiny/64.png" alt="Flag"/> {{ city.name }}</h5>
                         <h6>{{ city.description }}</h6>
                         <li><small>Last check at {{city.lastcheck}} local time({{city.tz}}).</small></li>
                         <li><img src="{{ url_for('static', filename='img/temperature.png') }}"> <b>Temperature:</b> {{ city.temperature }}</li>
@@ -197,6 +197,7 @@ $(document).ready(function() {
 
 function toggleReload(id) {
   var btn = document.getElementById(`btn${id}`);
+  console.log(btn)
 
   $(btn).click(function() {
       // disable button
