@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, url_for, session, flash, abort
-from qna.db import get_db
+#from qna.db import get_db
+from qna import db
 import datetime
 
 questions_bp = Blueprint('questions', __name__)
@@ -12,7 +13,7 @@ def ask():
         abort(403)
 
     if request.method == "POST":
-        db = get_db()
+        #db = get_db()
         question_text = request.form['question']
 
         db.execute('INSERT INTO questions (question_text, asked_by_id) VALUES(%s, %s)', (

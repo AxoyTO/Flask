@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  qna:
+    image: app/qna
+    container_name: qna
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ".:/app"

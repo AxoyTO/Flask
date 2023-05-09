@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, url_for, session, abort
-from qna.db import get_db
+#from qna.db import get_db
+from qna import db
 from qna.users.utils import get_current_user
 import datetime
 
@@ -9,7 +10,7 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 @main_bp.route('/home')
 def home():
-    db = get_db()
+    #db = get_db()
     try:
         db.execute(
             'SELECT * FROM questions WHERE answer_text IS NOT NULL')

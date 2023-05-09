@@ -19,4 +19,7 @@ def config(filename='../database.ini', section='postgresql'):
 
 
 class Config:
+    SQLALCHEMY_DATABASE_URI = "sqlite:///questions.db"
+    #SECRET_KEY = os.environ.get('SECRET_KEY')
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
