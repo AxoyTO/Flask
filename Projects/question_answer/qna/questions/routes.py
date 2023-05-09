@@ -31,7 +31,7 @@ def answer():
     if session.get('expert', None) != 1:
         abort(403)
 
-    db = get_db()
+    #db = get_db()
     db.execute('SELECT * FROM questions WHERE answer_text IS NULL')
     questions_no_ans = db.fetchall()
 
