@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  foodtracker:
+    image: app/foodtracker
+    container_name: foodtracker
+    build: 
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
